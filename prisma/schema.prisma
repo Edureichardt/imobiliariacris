@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Imovel {
+  id         String   @id @default(uuid())
+  operacao   String   // Ex: comprar, alugar
+  descricao  String
+  tipo       String
+  cidade     String
+  bairro     String
+  endereco   String
+  preco      Float
+  criadoEm   DateTime @default(now())
+  ativo      Boolean  @default(true)   // já tinha
+  destaque   Boolean  @default(false)  // para destacar imóvel na home
+  tourUrl    String?                   // <-- campo opcional para vídeo (pode ser null)
+  fotos      Foto[]
+}
+
+model Foto {
+  id        String   @id @default(uuid())
+  url       String
+  imovelId  String
+  imovel    Imovel   @relation(fields: [imovelId], references: [id])
+}
