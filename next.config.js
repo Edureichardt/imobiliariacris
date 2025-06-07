@@ -20,7 +20,7 @@ const nextConfig = {
       },
     ],
   },
+  devIndicators: false,  // Desabilita completamente os indicadores do dev
 };
 
 module.exports = nextConfig;
-
