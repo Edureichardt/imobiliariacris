@@ -1,6 +1,7 @@
 import formidable from 'formidable';
 import cloudinary from '@/lib/cloudinary';
-import { prisma } from '@/lib/prisma';  // ajuste o caminho conforme seu projeto
+import { prisma } from '@/app/lib/prisma';
+  // ajuste o caminho conforme seu projeto
 
 export const config = {
   api: {
