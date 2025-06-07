@@ -27,17 +27,6 @@ const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   </button>
 );
 
-// Componente Logo
-const Logo = () => (
-  <Image
-    src="/logo1.png"
-    alt="Logo da CA Imóveis"
-    width={90}
-    height={90}
-        className="relative translate-y-1.5"
-    priority
-  />
-);
 
 // Pesquisa com filtros
 const Pesquisa = ({

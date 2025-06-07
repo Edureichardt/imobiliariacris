@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -19,21 +20,26 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uploadResult = await new Promise<any>((resolve, reject) => {
+    const uploadResult = await new Promise<UploadApiResponse>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          resource_type: 'video', // 👈 Importante para vídeo
-          folder: 'imoveis',      // Pasta opcional no Cloudinary
+          resource_type: 'video',
+          folder: 'imoveis',
         },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
+        (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
+          if (error || !result) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
       );
 
       stream.end(buffer);
     });
-console.log('Upload result Cloudinary:', uploadResult); 
+
+    console.log('Upload result Cloudinary:', uploadResult);
+
     return NextResponse.json({ success: true, url: uploadResult.secure_url });
   } catch (error) {
     console.error('Erro no upload de vídeo:', error);

@@ -92,7 +92,7 @@ export default function ExcluirImoveis() {
 
         <select
           value={ativoFiltro}
-          onChange={(e) => setAtivoFiltro(e.target.value as any)}
+          onChange={(e) => setAtivoFiltro(e.target.value as string)}
           className="border rounded p-2"
         >
           <option value="todos">Todos</option>

@@ -55,6 +55,7 @@ export async function GET() {
     });
     return NextResponse.json(properties);
   } catch (error) {
+    console.error('Erro ao buscar imóveis:', error); // ⬅️ agora está usando a variável
     return NextResponse.json({ error: 'Erro ao buscar imóveis' }, { status: 500 });
   }
 }

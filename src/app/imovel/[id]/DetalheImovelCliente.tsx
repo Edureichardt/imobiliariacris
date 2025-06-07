@@ -7,10 +7,10 @@ import {
   Ruler,
   MapPin,
   CircleDollarSign,
-  Share2,
   X,
-} from 'lucide-react';
+} from 'lucide-react'; // removi Share2 daqui
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
+import Link from 'next/link'; // importe Link do next/link
 
 export interface Foto {
   id: string;
@@ -173,11 +173,6 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
     setModalAberto(true);
   };
 
-  const abrirModalTodasFotos = () => {
-    setFotoModalIndex(0);
-    setModalAberto(true);
-  };
-
   const fecharModal = () => {
     setModalAberto(false);
   };
@@ -190,12 +185,13 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
   return (
     <main className="w-full p-6 bg-white">
       <div className="mb-6">
-        <a
+        {/* Troquei <a> por <Link> */}
+        <Link
           href="/"
           className="inline-block bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
         >
           Tela inicial
-        </a>
+        </Link>
       </div>
 
       <h1 className="text-4xl font-bold mb-6 text-green-900">
@@ -360,41 +356,41 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
 
           {/* Compartilhar */}
           <div>
-            <h2 className="text-2xl font-semibold text-green-900 mb-4">Compartilhar</h2>
-            <div className="flex gap-4">
+            <h2 className="text-2xl font-semibold text-green-900 mb-4">Compartilhar imóvel</h2>
+            <div className="flex gap-4 text-white">
               <a
                 href={whatsappShareLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition"
                 aria-label="Compartilhar no WhatsApp"
-                className="text-green-900 hover:text-green-700 text-3xl"
               >
-                <FaWhatsapp />
+                <FaWhatsapp size={24} />
               </a>
               <a
                 href={instagramPerfil}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Perfil no Instagram"
-                className="text-pink-600 hover:text-pink-500 text-3xl"
+                className="bg-pink-500 hover:bg-pink-600 p-3 rounded-full transition"
+                aria-label="Visitar Instagram"
               >
-                <FaInstagram />
+                <FaInstagram size={24} />
               </a>
               <a
                 href={facebookShareLink}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition"
                 aria-label="Compartilhar no Facebook"
-                className="text-blue-700 hover:text-blue-600 text-3xl"
               >
-                <FaFacebook />
+                <FaFacebook size={24} />
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal de imagens */}
+      {/* Modal de fotos */}
       {modalAberto && (
         <ModalImagens
           fotos={imovel.fotos}
