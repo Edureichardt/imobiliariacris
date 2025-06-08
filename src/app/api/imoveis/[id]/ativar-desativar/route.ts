@@ -1,12 +1,17 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { prisma } from '@/app/lib/prisma'; // certifique-se que o prisma está sendo importado
+import { prisma } from '@/app/lib/prisma';
 
-export async function PATCH(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
-  const { id } = context.params;
+export async function PATCH(request: NextRequest) {
+  // Extrair o `id` do pathname da URL
+  const { pathname } = request.nextUrl;
+  // Exemplo pathname: /api/imoveis/123/ativar-desativar
+  const match = pathname.match(/\/api\/imoveis\/([^\/]+)\/ativar-desativar/);
+  const id = match ? match[1] : null;
+
+  if (!id) {
+    return NextResponse.json({ message: 'ID do imóvel não fornecido' }, { status: 400 });
+  }
 
   try {
     const imovelAtual = await prisma.imovel.findUnique({
