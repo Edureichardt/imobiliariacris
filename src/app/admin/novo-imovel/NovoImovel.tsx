@@ -214,9 +214,6 @@ export default function CadastroImovel() {
               <div className="absolute z-50 top-full right-0 mt-1 shadow-lg rounded bg-white">
                 <EmojiPicker
                   onEmojiClick={onEmojiClick}
-                  preload={true}
-                  skinTonePickerPosition="none"
-                  searchDisabled={false}
                   height={300}
                 />
               </div>
