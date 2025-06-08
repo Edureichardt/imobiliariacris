@@ -9,7 +9,7 @@ interface DetalheImovelProps {
 }
 
 // SEO opcional
-export const generateMetadata = async ({ params }: DetalheImovelProps): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: { params: { id: string } }): Promise<Metadata> => {
   const imovel = await prisma.imovel.findUnique({
     where: { id: params.id },
   });
