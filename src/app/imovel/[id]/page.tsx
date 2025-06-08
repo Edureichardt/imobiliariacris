@@ -1,3 +1,5 @@
+// src/app/imovel/[id]/page.tsx
+
 import { prisma } from '@/app/lib/prisma';
 import DetalheImovelCliente from './DetalheImovelCliente';
 
