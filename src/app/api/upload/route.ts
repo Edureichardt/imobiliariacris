@@ -18,25 +18,31 @@ cloudinary.config({
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
-    const file = formData.get('image') as File; // Nome 'image' alinhado com front
+
+    // formData.get pode retornar File | File[] | null
+    let file = formData.get('image');
 
     if (!file) {
       return NextResponse.json({ error: 'Nenhum arquivo enviado' }, { status: 400 });
     }
 
-    const arrayBuffer = await file.arrayBuffer();
+    // Se vier array, pega o primeiro
+    if (Array.isArray(file)) {
+      file = file[0];
+    }
+
+    // Agora o TypeScript entende que 'file' é um File
+    const arrayBuffer = await (file as File).arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Converte para base64 string
     const base64 = buffer.toString('base64');
-    const dataUri = `data:${file.type};base64,${base64}`;
+    const dataUri = `data:${(file as File).type};base64,${base64}`;
 
     const uploadResult = await cloudinary.uploader.upload(dataUri, {
       folder: 'imoveis',
     });
 
     return NextResponse.json({ url: uploadResult.secure_url });
- // Retorna URL da imagem
   } catch (error) {
     console.error('Erro no upload:', error);
     return NextResponse.json({ error: 'Erro no upload' }, { status: 500 });
