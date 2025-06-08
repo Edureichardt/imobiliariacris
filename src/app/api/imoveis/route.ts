@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
 
-
 export async function GET() {
   try {
     console.log('Buscando imóveis...');
@@ -10,16 +9,19 @@ export async function GET() {
       include: { fotos: true },
     });
 
-    // Filtra fotos com url vazia ou null
+    // Garante que fotos seja sempre array e filtra URLs vazias ou nulas
     const imoveisFiltrados = imoveis.map(imovel => ({
       ...imovel,
-      fotos: imovel.fotos.filter(foto => foto.url && foto.url.trim() !== ''),
+      fotos: Array.isArray(imovel.fotos)
+        ? imovel.fotos.filter(foto => foto.url && foto.url.trim() !== '')
+        : [],
     }));
 
     console.log(`Encontrados ${imoveisFiltrados.length} imóveis`);
     return NextResponse.json(imoveisFiltrados);
   } catch (error) {
     console.error('Erro ao buscar imóveis:', error);
+    if (error instanceof Error) console.error(error.stack);
     return NextResponse.json({ error: 'Erro ao buscar imóveis' }, { status: 500 });
   }
 }
@@ -29,9 +31,14 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log('Recebendo dados para cadastro:', body);
 
-    const precoNumerico = parseFloat(
-      body.preco.replace(/[^\d,]/g, '').replace(',', '.')
-    );
+    // Garante que preco seja string antes de aplicar replace
+    const precoString = typeof body.preco === 'string' ? body.preco : String(body.preco ?? '');
+    const precoNumerico = parseFloat(precoString.replace(/[^\d,]/g, '').replace(',', '.'));
+
+    // Validação simples precoNumerico
+    if (isNaN(precoNumerico)) {
+      return NextResponse.json({ error: 'Preço inválido' }, { status: 400 });
+    }
 
     const novoImovel = await prisma.imovel.create({
       data: {
@@ -42,11 +49,13 @@ export async function POST(req: Request) {
         bairro: body.bairro,
         endereco: body.endereco,
         preco: precoNumerico,
-        destaque: body.destaque,  // <-- campo destaque incluído aqui
-        tourUrl: body.videoTour,
- 
+        destaque: body.destaque ?? false,  // default false se undefined
+        tourUrl: body.videoTour ?? null,
+
         fotos: {
-          create: body.fotos.map((url: string) => ({ url })),
+          create: Array.isArray(body.fotos)
+            ? body.fotos.map((url: string) => ({ url }))
+            : [],
         },
       },
       include: { fotos: true },
@@ -56,6 +65,8 @@ export async function POST(req: Request) {
     return NextResponse.json(novoImovel, { status: 201 });
   } catch (error) {
     console.error('Erro ao cadastrar imóvel:', error);
+    if (error instanceof Error) console.error(error.stack);
     return NextResponse.json({ error: 'Erro ao cadastrar imóvel' }, { status: 500 });
   }
 }
+
