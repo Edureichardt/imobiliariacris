@@ -6,7 +6,7 @@ interface Params {
 }
 
 interface Props {
-  params: Params; // params é sempre objeto síncrono
+  params: Params;
 }
 
 export default async function DetalheImovel({ params }: Props) {
