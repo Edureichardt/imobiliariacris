@@ -79,7 +79,6 @@ export default function ExcluirImoveis() {
           <option value="casa">Casa</option>
           <option value="apartamento">Apartamento</option>
           <option value="terreno">Terreno</option>
-          {/* Adicione outros tipos se quiser */}
         </select>
 
         <input
@@ -92,7 +91,7 @@ export default function ExcluirImoveis() {
 
         <select
           value={ativoFiltro}
-          onChange={(e) => setAtivoFiltro(e.target.value as string)}
+          onChange={(e) => setAtivoFiltro(e.target.value as 'todos' | 'ativos' | 'inativos')}
           className="border rounded p-2"
         >
           <option value="todos">Todos</option>
