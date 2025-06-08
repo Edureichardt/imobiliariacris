@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAllImoveis, createImovel } from '@/lib/imoveis'; // certifique-se de ter isso implementado
+import { getAllImoveis, createImovel } from '@/app/lib/imoveis'; // certifique-se de ter isso implementado
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
