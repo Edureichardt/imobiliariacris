@@ -1,13 +1,20 @@
 import { prisma } from '@/app/lib/prisma';
 import DetalheImovelCliente from './DetalheImovelCliente';
 
+interface Params {
+  id: string;
+}
+
 interface Props {
-  params: { id: string };
+  params: Params | Promise<Params>; // permitir que params seja Promise também
 }
 
 export default async function DetalheImovel({ params }: Props) {
+  // se params for Promise, aguarde
+  const resolvedParams = await params;
+
   const imovel = await prisma.imovel.findUnique({
-    where: { id: params.id },
+    where: { id: resolvedParams.id },
     include: { fotos: true },
   });
 
@@ -15,4 +22,3 @@ export default async function DetalheImovel({ params }: Props) {
 
   return <DetalheImovelCliente imovel={imovel} />;
 }
-
