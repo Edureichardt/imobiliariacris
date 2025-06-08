@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAllImoveis, createImovel } from '@/app/lib/imoveis'; // certifique-se de ter isso implementado
+import { getAllImoveis, createImovel } from '@/app/lib/imoveis';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -17,9 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     try {
-      const { tipo, cidade, bairro, operacao, preco, fotos, destaque } = req.body;
+      const { tipo, cidade, bairro, endereco, descricao, operacao, preco, fotos, destaque } = req.body;
 
-      if (!tipo || !cidade || !operacao || !preco) {
+      // Validação dos campos obrigatórios
+      if (!tipo || !cidade || !bairro || !endereco || !descricao || !operacao || preco === undefined) {
         return res.status(400).json({ message: 'Campos obrigatórios não preenchidos' });
       }
 
@@ -27,6 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tipo,
         cidade,
         bairro,
+        endereco,
+        descricao,
         operacao,
         preco: Number(preco),
         destaque: Boolean(destaque),
