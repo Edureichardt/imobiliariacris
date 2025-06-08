@@ -182,7 +182,7 @@ const Destaques: React.FC = () => {
   useEffect(() => {
     const fetchDestaques = async () => {
       try {
-        const res = await fetch('/api/imoveis/destaques');
+        const res = await fetch('/api/imoveis/destaque');
         const data = await res.json();
         setDestaques(data);
         setPaginaAtual(1);
