@@ -65,7 +65,8 @@ export default function CadastroImovel() {
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
+    if (!(e.target.files instanceof FileList)) return;
+    const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     setUploadingFoto(true);
@@ -101,7 +102,8 @@ export default function CadastroImovel() {
   };
 
   const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    if (!(e.target.files instanceof FileList)) return;
+    const file = e.target.files[0];
     if (!file) return;
 
     setUploadingVideo(true);
