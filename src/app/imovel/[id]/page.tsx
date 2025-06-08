@@ -3,7 +3,13 @@
 import { prisma } from '@/app/lib/prisma';
 import DetalheImovelCliente from './DetalheImovelCliente';
 
-export default async function DetalheImovel({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function DetalheImovel({ params }: PageProps) {
   const imovel = await prisma.imovel.findUnique({
     where: { id: params.id },
     include: { fotos: true },
