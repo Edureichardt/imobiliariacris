@@ -11,5 +11,11 @@ export default async function Page({ params }: { params: { id: string } }) {
     return <div className="text-center p-10">Imóvel não encontrado.</div>;
   }
 
-  return <DetalheImovelCliente imovel={imovel} />;
+  // Corrigindo o tourUrl caso venha null
+  const imovelCorrigido = {
+    ...imovel,
+    tourUrl: imovel.tourUrl ?? undefined,
+  };
+
+  return <DetalheImovelCliente imovel={imovelCorrigido} />;
 }
