@@ -22,7 +22,6 @@ export async function updateImovel(id: string, data: { ativo: boolean }) {
   });
 }
 
-// Nova função para criar imóvel, incluindo o campo 'destaque'
 export async function createImovel(data: {
   tipo: string;
   cidade: string;
@@ -32,11 +31,20 @@ export async function createImovel(data: {
   destaque?: boolean;
   ativo?: boolean;
   fotos?: { url: string }[];
-  tourUrl?: string; 
+  tourUrl?: string | null;
 }) {
-  const { tipo, cidade, bairro, operacao, preco, destaque = false, ativo = true, fotos = [], tourUrl = null,  } = data;
+  const {
+    tipo,
+    cidade,
+    bairro,
+    operacao,
+    preco,
+    destaque = false,
+    ativo = true,
+    fotos = [],
+    tourUrl,
+  } = data;
 
-  // Cria imóvel com fotos em uma operação única
   return prisma.imovel.create({
     data: {
       tipo,
@@ -46,9 +54,9 @@ export async function createImovel(data: {
       preco,
       destaque,
       ativo,
-       tourUrl,
+      ...(tourUrl !== null && tourUrl !== undefined ? { tourUrl } : {}),
       fotos: {
-        create: fotos.map(foto => ({
+        create: fotos.map((foto) => ({
           url: foto.url,
         })),
       },
