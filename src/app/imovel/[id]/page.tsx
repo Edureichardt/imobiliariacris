@@ -2,14 +2,15 @@ import { prisma } from '@/app/lib/prisma';
 import DetalheImovelCliente from './DetalheImovelCliente';
 import { Metadata } from 'next';
 
-interface DetalheImovelProps {
-  params: {
-    id: string;
-  };
-}
+// Não precisa necessariamente definir a interface, pode usar inline typing no parâmetro
+// Mas se quiser manter, não tem problema
 
 // SEO opcional
-export const generateMetadata = async ({ params }: { params: { id: string } }): Promise<Metadata> => {
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> => {
   const imovel = await prisma.imovel.findUnique({
     where: { id: params.id },
   });
@@ -20,7 +21,11 @@ export const generateMetadata = async ({ params }: { params: { id: string } }): 
   };
 };
 
-export default async function DetalheImovel({ params }: DetalheImovelProps) {
+export default async function DetalheImovel({
+  params,
+}: {
+  params: { id: string };
+}) {
   const imovel = await prisma.imovel.findUnique({
     where: { id: params.id },
     include: { fotos: true },
