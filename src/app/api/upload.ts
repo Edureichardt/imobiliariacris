@@ -29,7 +29,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(500).json({ error: 'Erro ao fazer upload.' });
     }
 
-    const file = files.image as File;
+    const image = files.image;
+    const file = Array.isArray(image) ? image[0] : image;
+
     if (!file || !file.filepath) {
       return res.status(400).json({ error: 'Imagem não encontrada.' });
     }
