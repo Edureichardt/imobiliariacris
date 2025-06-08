@@ -21,3 +21,14 @@ export default async function DetalheImovel({ params }: PageProps) {
 
   return <DetalheImovelCliente imovel={imovel} />;
 }
+
+// ✅ Gera os caminhos para build SSG (necessário para evitar erro no Vercel)
+export async function generateStaticParams() {
+  const imoveis = await prisma.imovel.findMany({
+    select: { id: true },
+  });
+
+  return imoveis.map((imovel) => ({
+    id: imovel.id,
+  }));
+}
