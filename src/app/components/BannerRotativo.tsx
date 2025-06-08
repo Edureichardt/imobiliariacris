@@ -1,8 +1,17 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import Image from "next/image";
+'use client';
 
-const BannerRotativo = ({ children }) => {
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import Image from "next/image";
+import React from "react";
+
+type BannerRotativoProps = {
+  children?: React.ReactNode;
+};
+
+export const BannerRotativo = ({ children }: BannerRotativoProps) => {
   const imagens = [
     '/banner1.jpg',
     '/banner2.jpg',
