@@ -20,7 +20,10 @@ const nextConfig = {
       },
     ],
   },
-  devIndicators: false,  // Desabilita completamente os indicadores do dev
+  devIndicators: {
+    buildActivity: false,
+    autoPrerender: false,
+  },
 };
 
 module.exports = nextConfig;
