@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useRef } from 'react';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
@@ -27,10 +27,11 @@ export default function CadastroImovel() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target;
+    const target = e.target;
+    const { name, value, type } = target;
 
-    if (type === 'checkbox') {
-      setForm(prev => ({ ...prev, [name]: checked }));
+    if (type === 'checkbox' && 'checked' in target) {
+      setForm(prev => ({ ...prev, [name]: (target as HTMLInputElement).checked }));
     } else if (name === 'preco') {
       const raw = value.replace(/[^\d]/g, '');
       const num = parseFloat(raw) / 100;
@@ -64,9 +65,9 @@ export default function CadastroImovel() {
     }, 0);
   };
 
-  // Upload de imagens
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
+    if (!(e.target.files instanceof FileList)) return;
+    const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
     setUploadingFoto(true);
@@ -86,7 +87,6 @@ export default function CadastroImovel() {
           const data = await res.json();
 
           if (!res.ok) throw new Error(data.error || 'Falha no upload');
-
           if (!data.url) throw new Error('URL da imagem não retornada');
 
           return data.url as string;
@@ -102,9 +102,9 @@ export default function CadastroImovel() {
     }
   };
 
-  // Upload do vídeo tour
   const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    if (!(e.target.files instanceof FileList)) return;
+    const file = e.target.files[0];
     if (!file) return;
 
     setUploadingVideo(true);
@@ -120,9 +120,7 @@ export default function CadastroImovel() {
       });
 
       const data = await res.json();
-      console.log('Resposta upload vídeo:', data);
       if (!res.ok) throw new Error(data.error || 'Falha no upload do vídeo');
-
       if (!data.url) throw new Error('URL do vídeo não retornada');
 
       setForm(prev => ({ ...prev, tourUrl: data.url }));
@@ -216,9 +214,6 @@ export default function CadastroImovel() {
               <div className="absolute z-50 top-full right-0 mt-1 shadow-lg rounded bg-white">
                 <EmojiPicker
                   onEmojiClick={onEmojiClick}
-                  preload={true}
-                  skinTonePickerPosition="none"
-                  searchDisabled={false}
                   height={300}
                 />
               </div>
@@ -299,19 +294,16 @@ export default function CadastroImovel() {
           {uploadingFoto && (
             <p className="text-sm text-gray-500 mt-2">Enviando fotos...</p>
           )}
-
           {form.fotos.length > 0 && (
             <div className="mt-4">
-              <p className="text-sm font-semibold text-gray-700 mb-1">
-                Imagens enviadas:
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                {form.fotos.map((url, idx) => (
+              <p className="font-semibold mb-2">Fotos enviadas:</p>
+              <div className="flex flex-wrap gap-2">
+                {form.fotos.map((url, i) => (
                   <img
-                    key={idx}
+                    key={i}
                     src={url}
-                    alt={`Foto ${idx + 1}`}
-                    className="w-full h-24 object-cover rounded"
+                    alt={`Foto ${i + 1}`}
+                    className="w-24 h-24 object-cover rounded"
                   />
                 ))}
               </div>
@@ -320,7 +312,7 @@ export default function CadastroImovel() {
         </div>
 
         <div>
-          <label className="block font-semibold">Tour pelo Imóvel (Vídeo)</label>
+          <label className="block font-semibold">Vídeo Tour</label>
           <input
             type="file"
             accept="video/*"
@@ -330,32 +322,34 @@ export default function CadastroImovel() {
           {uploadingVideo && (
             <p className="text-sm text-gray-500 mt-2">Enviando vídeo...</p>
           )}
-
           {form.tourUrl && (
-            <div className="mt-4">
-              <video src={form.tourUrl} controls className="w-full rounded" />
-            </div>
+            <video
+              src={form.tourUrl}
+              controls
+              className="mt-4 w-full max-h-64 rounded"
+            />
           )}
         </div>
 
         <div>
-          <label className="flex items-center gap-2">
+          <label className="inline-flex items-center">
             <input
               type="checkbox"
               name="destaque"
               checked={form.destaque}
               onChange={handleChange}
+              className="mr-2"
             />
-            Marcar como Destaque
+            Destaque
           </label>
         </div>
 
         <button
           type="submit"
-          className="bg-green-800 text-white py-2 px-6 rounded hover:bg-green-700 disabled:opacity-50"
           disabled={uploadingFoto || uploadingVideo}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
         >
-          Cadastrar
+          Cadastrar Imóvel
         </button>
       </form>
     </div>
