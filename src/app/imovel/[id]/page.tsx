@@ -1,15 +1,26 @@
-// src/app/imovel/[id]/page.tsx
-
 import { prisma } from '@/app/lib/prisma';
 import DetalheImovelCliente from './DetalheImovelCliente';
+import { Metadata } from 'next';
 
-interface PageProps {
+interface DetalheImovelProps {
   params: {
     id: string;
   };
 }
 
-export default async function DetalheImovel({ params }: PageProps) {
+// SEO opcional
+export const generateMetadata = async ({ params }: DetalheImovelProps): Promise<Metadata> => {
+  const imovel = await prisma.imovel.findUnique({
+    where: { id: params.id },
+  });
+
+  return {
+    title: imovel?.titulo || 'Imóvel',
+    description: imovel?.descricao?.substring(0, 150) || '',
+  };
+};
+
+export default async function DetalheImovel({ params }: DetalheImovelProps) {
   const imovel = await prisma.imovel.findUnique({
     where: { id: params.id },
     include: { fotos: true },
@@ -20,15 +31,4 @@ export default async function DetalheImovel({ params }: PageProps) {
   }
 
   return <DetalheImovelCliente imovel={imovel} />;
-}
-
-// ✅ Gera os caminhos para build SSG (necessário para evitar erro no Vercel)
-export async function generateStaticParams() {
-  const imoveis = await prisma.imovel.findMany({
-    select: { id: true },
-  });
-
-  return imoveis.map((imovel) => ({
-    id: imovel.id,
-  }));
 }
