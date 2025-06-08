@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
 
-
-
-
-
-
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PATCH(request: NextRequest, context: { params: { id: string } }) {
+  const { id } = context.params;
 
   try {
     const imovelAtual = await prisma.imovel.findUnique({
