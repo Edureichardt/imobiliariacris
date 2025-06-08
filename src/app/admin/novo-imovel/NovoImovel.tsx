@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useRef } from 'react';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
@@ -64,7 +64,6 @@ export default function CadastroImovel() {
     }, 0);
   };
 
-  // Upload de imagens
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     if (files.length === 0) return;
@@ -86,7 +85,6 @@ export default function CadastroImovel() {
           const data = await res.json();
 
           if (!res.ok) throw new Error(data.error || 'Falha no upload');
-
           if (!data.url) throw new Error('URL da imagem não retornada');
 
           return data.url as string;
@@ -102,7 +100,6 @@ export default function CadastroImovel() {
     }
   };
 
-  // Upload do vídeo tour
   const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -120,9 +117,7 @@ export default function CadastroImovel() {
       });
 
       const data = await res.json();
-      console.log('Resposta upload vídeo:', data);
       if (!res.ok) throw new Error(data.error || 'Falha no upload do vídeo');
-
       if (!data.url) throw new Error('URL do vídeo não retornada');
 
       setForm(prev => ({ ...prev, tourUrl: data.url }));
@@ -299,7 +294,6 @@ export default function CadastroImovel() {
           {uploadingFoto && (
             <p className="text-sm text-gray-500 mt-2">Enviando fotos...</p>
           )}
-
           {form.fotos.length > 0 && (
             <div className="mt-4">
               <p className="text-sm font-semibold text-gray-700 mb-1">
@@ -330,7 +324,6 @@ export default function CadastroImovel() {
           {uploadingVideo && (
             <p className="text-sm text-gray-500 mt-2">Enviando vídeo...</p>
           )}
-
           {form.tourUrl && (
             <div className="mt-4">
               <video src={form.tourUrl} controls className="w-full rounded" />
