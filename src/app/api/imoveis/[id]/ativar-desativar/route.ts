@@ -1,12 +1,12 @@
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma'; // certifique-se que o prisma está sendo importado
 
-// Tipagem correta para rotas dinâmicas
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = context.params;
 
   try {
     const imovelAtual = await prisma.imovel.findUnique({
@@ -28,5 +28,6 @@ export async function PATCH(
     return NextResponse.json({ message: 'Erro ao atualizar imóvel' }, { status: 500 });
   }
 }
+
 
 
