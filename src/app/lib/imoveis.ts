@@ -25,7 +25,9 @@ export async function updateImovel(id: string, data: { ativo: boolean }) {
 export async function createImovel(data: {
   tipo: string;
   cidade: string;
-  bairro: string; // Tornar obrigatório
+  bairro: string;
+  endereco: string;
+  descricao: string;
   operacao: string;
   preco: number;
   destaque?: boolean;
@@ -37,6 +39,8 @@ export async function createImovel(data: {
     tipo,
     cidade,
     bairro,
+    endereco,
+    descricao,
     operacao,
     preco,
     destaque = false,
@@ -49,7 +53,9 @@ export async function createImovel(data: {
     data: {
       tipo,
       cidade,
-      bairro,  // aqui não haverá undefined
+      bairro,
+      endereco,
+      descricao,
       operacao,
       preco,
       destaque,
