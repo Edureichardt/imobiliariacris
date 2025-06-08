@@ -1,15 +1,30 @@
+import React, { ReactNode } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-// Adicione manualmente
-const Button = ({ children, className }) => (
+
+// Tipagem das props do Button
+type ButtonProps = {
+  children: ReactNode;
+  className?: string;
+};
+const Button = ({ children, className }: ButtonProps) => (
   <button className={className}>{children}</button>
 );
 
-const Card = ({ children, className }) => (
+// Tipagem das props do Card
+type CardProps = {
+  children: ReactNode;
+  className?: string;
+};
+const Card = ({ children, className }: CardProps) => (
   <div className={`p-4 border rounded-lg ${className}`}>{children}</div>
 );
 
-const CardContent = ({ children }) => <div>{children}</div>;
+// Tipagem das props do CardContent
+type CardContentProps = {
+  children: ReactNode;
+};
+const CardContent = ({ children }: CardContentProps) => <div>{children}</div>;
 
 export default function Home() {
   return (
@@ -34,7 +49,8 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="text-4xl font-bold mb-4"
           >
-            Encontre o imóvel dos seus sonhos</motion.h2>
+            Encontre o imóvel dos seus sonhos
+          </motion.h2>
           <p className="text-lg mb-6">Casas, apartamentos e terrenos com as melhores condições do mercado.</p>
           <Button className="bg-green-900 hover:bg-green-800 text-white px-6 py-3 rounded-full text-lg">
             Ver Imóveis
