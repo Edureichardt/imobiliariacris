@@ -22,7 +22,6 @@ const nextConfig = {
   },
   devIndicators: {
     buildActivity: false,
-    autoPrerender: false,
   },
 };
 

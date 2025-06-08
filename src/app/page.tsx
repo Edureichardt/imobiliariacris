@@ -8,7 +8,6 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-// Tipo para filtros
 type Filtros = {
   tipo: string;
   cidade: string;
@@ -16,7 +15,6 @@ type Filtros = {
   operacao: string;
 };
 
-// Botão reutilizável
 const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   children,
   className = '',
@@ -30,19 +28,16 @@ const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   </button>
 );
 
-// Pesquisa com filtros
-const Pesquisa = ({
-  filtros,
-  setFiltros,
-  onSearch,
-}: {
+const Pesquisa: React.FC<{
   filtros: Filtros;
   setFiltros: React.Dispatch<React.SetStateAction<Filtros>>;
   onSearch: () => void;
-}) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+}> = ({ filtros, setFiltros, onSearch }) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFiltros(prev => ({ ...prev, [name]: value }));
+    setFiltros((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -57,7 +52,11 @@ const Pesquisa = ({
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end"
       >
         {[
-          { label: 'Tipo', name: 'tipo', options: ['', 'casa', 'apartamento', 'terreno', 'comercial', 'sítio'] },
+          {
+            label: 'Tipo',
+            name: 'tipo',
+            options: ['', 'casa', 'apartamento', 'terreno', 'comercial', 'sítio'],
+          },
           { label: 'Cidade', name: 'cidade', options: ['', 'Rio Negro - PR', 'Mafra - SC'] },
           { label: 'Operação', name: 'operacao', options: ['', 'comprar', 'alugar'] },
         ].map(({ label, name, options }) => (
@@ -65,7 +64,7 @@ const Pesquisa = ({
             <label className="block mb-1 font-semibold">{label}</label>
             <select
               name={name}
-              value={filtros[name]}
+              value={(filtros as any)[name]}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded p-2"
             >
@@ -98,8 +97,7 @@ const Pesquisa = ({
   );
 };
 
-// Banner rotativo
-const BannerRotativo = ({ children }: { children: React.ReactNode }) => {
+const BannerRotativo: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const imagens = ['/banner1.jpg', '/banner2.jpg', '/banner3.jpg'];
 
   return (
@@ -115,7 +113,12 @@ const BannerRotativo = ({ children }: { children: React.ReactNode }) => {
         {imagens.map((src, i) => (
           <SwiperSlide key={i}>
             <div className="relative w-full h-full">
-              <Image src={src} alt={`Banner ${i + 1}`} fill className="object-cover" />
+              <Image
+                src={src}
+                alt={`Banner ${i + 1}`}
+                fill
+                style={{ objectFit: 'cover' }}
+              />
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                 <h2 className="text-white text-4xl md:text-5xl font-serif text-center px-4">
                   A melhor escolha no lugar certo é aqui
@@ -130,7 +133,6 @@ const BannerRotativo = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Tipagem imóvel
 type Imovel = {
   id: string | number;
   tipo: string;
@@ -145,16 +147,11 @@ type Imovel = {
 
 const ITEMS_PER_PAGE = 4;
 
-// Paginação
-const Paginacao = ({
-  totalItems,
-  currentPage,
-  onPageChange,
-}: {
+const Paginacao: React.FC<{
   totalItems: number;
   currentPage: number;
   onPageChange: (page: number) => void;
-}) => {
+}> = ({ totalItems, currentPage, onPageChange }) => {
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   if (totalPages <= 1) return null;
 
@@ -164,9 +161,12 @@ const Paginacao = ({
         <button
           key={i}
           className={`px-3 py-1 rounded ${
-            currentPage === i + 1 ? 'bg-green-900 text-white' : 'bg-gray-200 hover:bg-gray-300'
+            currentPage === i + 1
+              ? 'bg-green-900 text-white'
+              : 'bg-gray-200 hover:bg-gray-300'
           }`}
           onClick={() => onPageChange(i + 1)}
+          aria-label={`Página ${i + 1}`}
         >
           {i + 1}
         </button>
@@ -175,17 +175,20 @@ const Paginacao = ({
   );
 };
 
-// Destaques
-const Destaques = () => {
+const Destaques: React.FC = () => {
   const [destaques, setDestaques] = useState<Imovel[]>([]);
   const [paginaAtual, setPaginaAtual] = useState(1);
 
   useEffect(() => {
     const fetchDestaques = async () => {
-      const res = await fetch('/api/imoveis/destaques');
-      const data = await res.json();
-      setDestaques(data);
-      setPaginaAtual(1);
+      try {
+        const res = await fetch('/api/imoveis/destaques');
+        const data = await res.json();
+        setDestaques(data);
+        setPaginaAtual(1);
+      } catch {
+        setDestaques([]);
+      }
     };
     fetchDestaques();
   }, []);
@@ -197,15 +200,16 @@ const Destaques = () => {
     <section className="bg-gray-100 py-8">
       <h2 className="text-3xl font-bold text-center mb-6">Imóveis em Destaque</h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
-        {dadosPagina.map(imovel => (
+        {dadosPagina.map((imovel) => (
           <div
             key={imovel.id}
             className="border rounded shadow p-4 bg-white hover:scale-[1.02] transition"
           >
             <Link href={`/imovel/${imovel.id}`}>
+              {/* Poderia usar <Image> também, mas aqui fica img para simples */}
               <img
                 src={imovel.fotos?.[0]?.url || 'https://picsum.photos/600/400'}
-                alt={`Foto do imóvel em ${imovel.bairro}`}
+                alt={`Foto do imóvel em ${imovel.bairro ?? 'localização'}`}
                 className="h-60 w-full object-cover mb-2 rounded cursor-pointer"
               />
             </Link>
@@ -232,14 +236,10 @@ const Destaques = () => {
   );
 };
 
-// Navegação dos imóveis
-const NavegacaoImoveis = ({
-  titulo,
-  imoveis,
-}: {
+const NavegacaoImoveis: React.FC<{
   titulo: string;
   imoveis: Imovel[];
-}) => {
+}> = ({ titulo, imoveis }) => {
   const [paginaAtual, setPaginaAtual] = useState(1);
   const startIndex = (paginaAtual - 1) * ITEMS_PER_PAGE;
   const dadosPagina = imoveis.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -288,7 +288,6 @@ const NavegacaoImoveis = ({
   );
 };
 
-// Página principal
 export default function Page() {
   const [imoveis, setImoveis] = useState<Imovel[]>([]);
   const [filtros, setFiltros] = useState<Filtros>({
@@ -309,7 +308,7 @@ export default function Page() {
           setImoveis(ativos);
           setImoveisFiltrados(ativos);
         } else {
-          throw new Error();
+          throw new Error('Erro na resposta');
         }
       } catch {
         setImoveis([]);
@@ -321,18 +320,18 @@ export default function Page() {
 
   const aplicarFiltros = useCallback(() => {
     let resultado = [...imoveis];
-    if (filtros.tipo) resultado = resultado.filter(i => i.tipo === filtros.tipo);
-    if (filtros.cidade) resultado = resultado.filter(i => i.cidade === filtros.cidade);
+    if (filtros.tipo) resultado = resultado.filter((i) => i.tipo === filtros.tipo);
+    if (filtros.cidade) resultado = resultado.filter((i) => i.cidade === filtros.cidade);
     if (filtros.bairro)
-      resultado = resultado.filter(i =>
+      resultado = resultado.filter((i) =>
         i.bairro?.toLowerCase().includes(filtros.bairro.toLowerCase())
       );
-    if (filtros.operacao) resultado = resultado.filter(i => i.operacao === filtros.operacao);
+    if (filtros.operacao) resultado = resultado.filter((i) => i.operacao === filtros.operacao);
     setImoveisFiltrados(resultado);
   }, [filtros, imoveis]);
 
-  const imoveisCompra = imoveisFiltrados.filter(i => i.operacao === 'comprar');
-  const imoveisAluguel = imoveisFiltrados.filter(i => i.operacao === 'alugar');
+  const imoveisCompra = imoveisFiltrados.filter((i) => i.operacao === 'comprar');
+  const imoveisAluguel = imoveisFiltrados.filter((i) => i.operacao === 'alugar');
 
   return (
     <main>
