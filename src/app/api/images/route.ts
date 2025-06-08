@@ -3,7 +3,7 @@ import { prisma } from '@/app/lib/prisma';
 
 export async function GET() {
   try {
-    const images = await prisma.image.findMany({
+    const images = await prisma.foto.findMany({
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(images);
