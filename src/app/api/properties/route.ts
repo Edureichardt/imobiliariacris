@@ -27,35 +27,43 @@ export async function POST(req: Request) {
 
   const imageUrl = `/uploads/${filename}`;
 
-  // Criar imóvel com imagem no banco
-  const property = await prisma.property.create({
+  // Criar imóvel com foto no banco
+  const imovel = await prisma.imovel.create({
     data: {
-      title,
-      description,
-      price,
-      image: {
+      descricao: description,
+      preco: price,
+      // Campos obrigatórios que seu model precisa (adicione os valores reais ou default aqui)
+      operacao: 'comprar',  // exemplo, ajustar conforme seu uso
+      tipo: 'apartamento',  // exemplo, ajustar conforme seu uso
+      cidade: 'Cidade Exemplo',  // exemplo, ajustar conforme seu uso
+      bairro: 'Bairro Exemplo',  // exemplo, ajustar conforme seu uso
+      endereco: 'Endereço Exemplo',  // exemplo, ajustar conforme seu uso
+      destaque: false,
+      ativo: true,
+
+      fotos: {
         create: {
           url: imageUrl,
         },
       },
     },
     include: {
-      image: true,
+      fotos: true,
     },
   });
 
-  return NextResponse.json({ success: true, property });
+  return NextResponse.json({ success: true, imovel });
 }
 
 export async function GET() {
   try {
-    const properties = await prisma.property.findMany({
-      include: { image: true },
-      orderBy: { createdAt: 'desc' },
+    const imoveis = await prisma.imovel.findMany({
+      include: { fotos: true },
+      orderBy: { criadoEm: 'desc' },
     });
-    return NextResponse.json(properties);
+    return NextResponse.json(imoveis);
   } catch (error) {
-    console.error('Erro ao buscar imóveis:', error); // ⬅️ agora está usando a variável
+    console.error('Erro ao buscar imóveis:', error);
     return NextResponse.json({ error: 'Erro ao buscar imóveis' }, { status: 500 });
   }
 }
