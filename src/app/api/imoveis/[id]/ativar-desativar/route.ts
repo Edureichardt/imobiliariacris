@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // certifique-se que o prisma está sendo importado
+import { prisma } from '@/app/lib/prisma'; // certifique-se que o prisma está sendo importado
 
 export async function PATCH(
   request: NextRequest,
