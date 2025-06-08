@@ -8,10 +8,13 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-
-
-
-
+// Tipo para filtros
+type Filtros = {
+  tipo: string;
+  cidade: string;
+  bairro: string;
+  operacao: string;
+};
 
 // Botão reutilizável
 const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
@@ -27,15 +30,14 @@ const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   </button>
 );
 
-
 // Pesquisa com filtros
 const Pesquisa = ({
   filtros,
   setFiltros,
   onSearch,
 }: {
-  filtros: { [key: string]: string };
-  setFiltros: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+  filtros: Filtros;
+  setFiltros: React.Dispatch<React.SetStateAction<Filtros>>;
   onSearch: () => void;
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -286,12 +288,10 @@ const NavegacaoImoveis = ({
   );
 };
 
-
-
 // Página principal
 export default function Page() {
   const [imoveis, setImoveis] = useState<Imovel[]>([]);
-  const [filtros, setFiltros] = useState({
+  const [filtros, setFiltros] = useState<Filtros>({
     tipo: '',
     cidade: '',
     bairro: '',
@@ -334,20 +334,16 @@ export default function Page() {
   const imoveisCompra = imoveisFiltrados.filter(i => i.operacao === 'comprar');
   const imoveisAluguel = imoveisFiltrados.filter(i => i.operacao === 'alugar');
 
-return (
-  <main>
+  return (
+    <main>
+      <BannerRotativo>
+        <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={aplicarFiltros} />
+      </BannerRotativo>
 
-    <BannerRotativo>
-      <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={aplicarFiltros} />
-    </BannerRotativo>
+      <Destaques />
 
-    <Destaques />
-
-    <NavegacaoImoveis titulo="Imóveis para Compra" imoveis={imoveisCompra} />
-    <NavegacaoImoveis titulo="Imóveis para Aluguel" imoveis={imoveisAluguel} />
-
-    
-  </main>
-  
-);
+      <NavegacaoImoveis titulo="Imóveis para Compra" imoveis={imoveisCompra} />
+      <NavegacaoImoveis titulo="Imóveis para Aluguel" imoveis={imoveisAluguel} />
+    </main>
+  );
 }
