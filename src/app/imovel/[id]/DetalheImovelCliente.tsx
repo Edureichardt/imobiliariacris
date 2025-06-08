@@ -212,7 +212,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
           </div>
 
           <div className="flex gap-4 mt-4 overflow-x-auto">
-            {imovel.fotos.slice(0, 4).map((foto) => (
+            {(imovel.fotos ?? []).slice(0, 4).map((foto) => (
               <button
                 key={foto.id}
                 onClick={() => setFotoAtual(foto.url)}
@@ -315,82 +315,68 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
           </div>
 
           <div>
-            <h2 className="text-2xl font-semibold text-green-900 mb-4">Ficha técnica</h2>
-            {/* DESCRIÇÃO ACIMA */}
+            <h2 className="text-3xl font-bold mb-4 text-green-900">
+              R$ {imovel.preco.toLocaleString('pt-BR')}
+            </h2>
+
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-green-900">
+              <li className="flex items-center gap-2">
+                <BedDouble size={24} />
+                {imovel.quartos ?? 'N/A'} quartos
+              </li>
+              <li className="flex items-center gap-2">
+                <Bath size={24} />
+                {imovel.banheiros ?? 'N/A'} banheiros
+              </li>
+              <li className="flex items-center gap-2">
+                <Ruler size={24} />
+                {imovel.area ? `${imovel.area} m²` : 'Área não informada'}
+              </li>
+              <li className="flex items-center gap-2">
+                <MapPin size={24} />
+                {imovel.bairro}, {imovel.cidade}
+              </li>
+            </ul>
+
             {imovel.descricao && (
-              <p className="text-gray-700 mb-6 whitespace-pre-wrap">{imovel.descricao}</p>
+              <p className="mt-6 whitespace-pre-line text-green-900">{imovel.descricao}</p>
             )}
-            <div className="flex items-center gap-2 text-green-900 mb-2">
-              <CircleDollarSign size={24} />
-              <span className="text-2xl font-bold">
-                R$ {imovel.preco.toLocaleString('pt-BR')}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-green-900 mb-2">
-              <MapPin size={20} />
-              <span>
-                {imovel.endereco}, {imovel.bairro} - {imovel.cidade}
-              </span>
-            </div>
-            <div className="flex gap-6 text-green-900 mb-4">
-              {imovel.quartos !== undefined && (
-                <div className="flex items-center gap-1">
-                  <BedDouble size={20} />
-                  <span>{imovel.quartos} quartos</span>
-                </div>
-              )}
-              {imovel.banheiros !== undefined && (
-                <div className="flex items-center gap-1">
-                  <Bath size={20} />
-                  <span>{imovel.banheiros} banheiros</span>
-                </div>
-              )}
-              {imovel.area !== undefined && (
-                <div className="flex items-center gap-1">
-                  <Ruler size={20} />
-                  <span>{imovel.area} m²</span>
-                </div>
-              )}
-            </div>
           </div>
 
-          {/* Compartilhar */}
-          <div>
-            <h2 className="text-2xl font-semibold text-green-900 mb-4">Compartilhar imóvel</h2>
-            <div className="flex gap-4 text-white">
-              <a
-                href={whatsappShareLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-700 p-3 rounded-full transition"
-                aria-label="Compartilhar no WhatsApp"
-              >
-                <FaWhatsapp size={24} />
-              </a>
-              <a
-                href={instagramPerfil}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-pink-500 hover:bg-pink-600 p-3 rounded-full transition"
-                aria-label="Visitar Instagram"
-              >
-                <FaInstagram size={24} />
-              </a>
-              <a
-                href={facebookShareLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition"
-                aria-label="Compartilhar no Facebook"
-              >
-                <FaFacebook size={24} />
-              </a>
-            </div>
+          {/* Botões compartilhar */}
+          <div className="flex gap-4 mt-auto">
+            <a
+              href={whatsappShareLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
+              title="Compartilhar no WhatsApp"
+            >
+              <FaWhatsapp size={20} /> WhatsApp
+            </a>
+            <a
+              href={instagramPerfil}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
+              title="Instagram da imobiliária"
+            >
+              <FaInstagram size={20} /> Instagram
+            </a>
+            <a
+              href={facebookShareLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
+              title="Compartilhar no Facebook"
+            >
+              <FaFacebook size={20} /> Facebook
+            </a>
           </div>
         </div>
       </div>
 
-      {/* Modal de fotos */}
+      {/* Modal de imagens */}
       {modalAberto && (
         <ModalImagens
           fotos={imovel.fotos}
