@@ -8,7 +8,7 @@ type Imovel = {
   tipo: string;
   endereco: string;
   preco: number;
-  fotos: { url: string }[];
+  fotos: string[];   // array de URLs direto
   ativo: boolean;
 };
 
@@ -78,7 +78,6 @@ export default function GerenciarImoveis() {
           className="border rounded p-2"
         >
           <option value="">Todos os tipos</option>
-          {/* Adicione aqui os tipos que você sabe que existem */}
           <option value="casa">Casa</option>
           <option value="apartamento">Apartamento</option>
           <option value="terreno">Terreno</option>
@@ -90,7 +89,7 @@ export default function GerenciarImoveis() {
         {imoveisFiltrados.map(imovel => (
           <div key={imovel.id} className="border rounded shadow p-4">
             <Image
-              src={imovel.fotos?.[0]?.url || 'https://picsum.photos/400/300'}
+              src={imovel.fotos?.[0] || 'https://picsum.photos/400/300'}
               alt={imovel.tipo}
               width={400}
               height={300}
