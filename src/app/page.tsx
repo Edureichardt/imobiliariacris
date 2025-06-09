@@ -15,6 +15,20 @@ type Filtros = {
   operacao: string;
 };
 
+type Foto = { url: string };
+
+type Imovel = {
+  id: string | number;
+  tipo: string;
+  endereco: string;
+  preco: number | string;
+  fotos?: (string | Foto)[];
+  cidade?: string;
+  bairro?: string;
+  operacao?: string;
+  ativo?: boolean;
+};
+
 const Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
   children,
   className = '',
@@ -97,7 +111,7 @@ const Pesquisa: React.FC<{
   );
 };
 
-const BannerRotativo: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const BannerRotativo: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const imagens = ['/banner1.jpg', '/banner2.jpg', '/banner3.jpg'];
 
   return (
@@ -118,6 +132,7 @@ const BannerRotativo: React.FC<{ children: React.ReactNode }> = ({ children }) =
                 alt={`Banner ${i + 1}`}
                 fill
                 style={{ objectFit: 'cover' }}
+                priority={i === 0}
               />
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                 <h2 className="text-white text-4xl md:text-5xl font-serif text-center px-4">
@@ -131,18 +146,6 @@ const BannerRotativo: React.FC<{ children: React.ReactNode }> = ({ children }) =
       <div className="absolute bottom-[-80px] w-full">{children}</div>
     </div>
   );
-};
-
-type Imovel = {
-  id: string | number;
-  tipo: string;
-  endereco: string;
-  preco: number | string;
-  fotos?: string[]; // agora é array de strings
-  cidade?: string;
-  bairro?: string;
-  operacao?: string;
-  ativo?: boolean;
 };
 
 const ITEMS_PER_PAGE = 4;
@@ -173,6 +176,15 @@ const Paginacao: React.FC<{
       ))}
     </div>
   );
+};
+
+const getFotoUrl = (fotos?: (string | Foto)[]) => {
+  if (!Array.isArray(fotos) || fotos.length === 0) return null;
+  const primeira = fotos[0];
+  if (typeof primeira === 'string') return primeira;
+  if (typeof primeira === 'object' && primeira !== null && 'url' in primeira)
+    return primeira.url;
+  return null;
 };
 
 const Destaques: React.FC = () => {
@@ -207,7 +219,7 @@ const Destaques: React.FC = () => {
           >
             <Link href={`/imovel/${imovel.id}`}>
               <img
-                src={imovel.fotos?.[0] || 'https://picsum.photos/600/400'}
+                src={getFotoUrl(imovel.fotos) || 'https://picsum.photos/600/400'}
                 alt={`Foto do imóvel em ${imovel.bairro ?? 'localização'}`}
                 className="h-60 w-full object-cover mb-2 rounded cursor-pointer"
               />
@@ -247,7 +259,7 @@ const NavegacaoImoveis: React.FC<{
     <section className="max-w-7xl mx-auto mb-12" id="imoveis">
       <h2 className="text-3xl font-semibold mb-6">{titulo}</h2>
       {imoveis.length === 0 ? (
-        <p>Nenhum imóvel encontrado.</p>
+        <p className="text-center">Nenhum imóvel encontrado.</p>
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -258,7 +270,7 @@ const NavegacaoImoveis: React.FC<{
               >
                 <Link href={`/imovel/${id}`}>
                   <Image
-                    src={fotos?.[0] || 'https://picsum.photos/600/400'}
+                    src={getFotoUrl(fotos) || 'https://picsum.photos/600/400'}
                     alt={`Imagem do imóvel ${tipo} em ${bairro}`}
                     width={500}
                     height={300}
@@ -305,7 +317,7 @@ const HomePage: React.FC = () => {
       if (filtros.bairro) queryParams.push(`bairro=${encodeURIComponent(filtros.bairro)}`);
       if (filtros.operacao) queryParams.push(`operacao=${encodeURIComponent(filtros.operacao)}`);
 
-      if (queryParams.length > 0) url += '?' + queryParams.join('&');
+      if (queryParams.length > 0) url += `?${queryParams.join('&')}`;
 
       const res = await fetch(url);
       const data = await res.json();
@@ -324,10 +336,8 @@ const HomePage: React.FC = () => {
       <BannerRotativo>
         <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={buscarImoveis} />
       </BannerRotativo>
-
       <Destaques />
-
-      <NavegacaoImoveis titulo="Imóveis encontrados" imoveis={imoveis} />
+      <NavegacaoImoveis titulo="Imóveis Encontrados" imoveis={imoveis} />
     </>
   );
 };
