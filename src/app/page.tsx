@@ -20,7 +20,7 @@ type Imovel = {
   tipo: string;
   endereco: string;
   preco: number | string;
-  fotos?: string[]; // atualizado aqui
+  fotos?: string[];
   cidade?: string;
   bairro?: string;
   operacao?: string;
@@ -61,31 +61,25 @@ const Pesquisa: React.FC<{
         onSubmit={handleSubmit}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end"
       >
-        {[
-          {
-            label: 'Tipo',
-            name: 'tipo',
-            options: ['', 'casa', 'apartamento', 'terreno', 'comercial', 'sítio'],
-          },
+        {[{ label: 'Tipo', name: 'tipo', options: ['', 'casa', 'apartamento', 'terreno', 'comercial', 'sítio'] },
           { label: 'Cidade', name: 'cidade', options: ['', 'Rio Negro - PR', 'Mafra - SC'] },
-          { label: 'Operação', name: 'operacao', options: ['', 'comprar', 'alugar'] },
-        ].map(({ label, name, options }) => (
-          <div key={name}>
-            <label className="block mb-1 font-semibold">{label}</label>
-            <select
-              name={name}
-              value={(filtros as any)[name]}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded p-2"
-            >
-              {options.map((opt, idx) => (
-                <option key={idx} value={opt}>
-                  {opt ? opt.charAt(0).toUpperCase() + opt.slice(1) : 'Todos'}
-                </option>
-              ))}
-            </select>
-          </div>
-        ))}
+          { label: 'Operação', name: 'operacao', options: ['', 'comprar', 'alugar'] }].map(({ label, name, options }) => (
+            <div key={name}>
+              <label className="block mb-1 font-semibold">{label}</label>
+              <select
+                name={name}
+                value={(filtros as any)[name]}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded p-2"
+              >
+                {options.map((opt, idx) => (
+                  <option key={idx} value={opt}>
+                    {opt ? opt.charAt(0).toUpperCase() + opt.slice(1) : 'Todos'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
 
         <div>
           <label className="block mb-1 font-semibold">Bairro</label>
@@ -160,9 +154,7 @@ const Paginacao: React.FC<{
         <button
           key={i}
           className={`px-3 py-1 rounded ${
-            currentPage === i + 1
-              ? 'bg-green-900 text-white'
-              : 'bg-gray-200 hover:bg-gray-300'
+            currentPage === i + 1 ? 'bg-green-900 text-white' : 'bg-gray-200 hover:bg-gray-300'
           }`}
           onClick={() => onPageChange(i + 1)}
           aria-label={`Página ${i + 1}`}
@@ -178,79 +170,12 @@ const getFotoUrl = (fotos?: string[]) => {
   return Array.isArray(fotos) && fotos.length > 0 ? fotos[0] : null;
 };
 
-const Destaques: React.FC = () => {
-  const [destaques, setDestaques] = useState<Imovel[]>([]);
-  const [paginaAtual, setPaginaAtual] = useState(1);
-
-  useEffect(() => {
-    const fetchDestaques = async () => {
-      try {
-        const res = await fetch('/api/imoveis/destaque');
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          setDestaques(data);
-          setPaginaAtual(1);
-        } else {
-          setDestaques([]);
-        }
-      } catch {
-        setDestaques([]);
-      }
-    };
-    fetchDestaques();
-  }, []);
-
-  const dadosPagina = Array.isArray(destaques)
-    ? destaques.slice((paginaAtual - 1) * ITEMS_PER_PAGE, paginaAtual * ITEMS_PER_PAGE)
-    : [];
-
-  return (
-    <section className="bg-gray-100 py-8">
-      <h2 className="text-3xl font-bold text-center mb-6">Imóveis em Destaque</h2>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
-        {dadosPagina.map((imovel) => (
-          <div
-            key={imovel.id}
-            className="border rounded shadow p-4 bg-white hover:scale-[1.02] transition"
-          >
-            <Link href={`/imovel/${imovel.id}`}>
-              <img
-                src={getFotoUrl(imovel.fotos) || 'https://picsum.photos/600/400'}
-                alt={`Foto do imóvel em ${imovel.bairro ?? 'localização'}`}
-                className="h-60 w-full object-cover mb-2 rounded cursor-pointer"
-              />
-            </Link>
-            <h3 className="text-xl font-semibold capitalize">
-              {imovel.tipo} - {imovel.bairro}
-            </h3>
-            <p className="text-gray-600">{imovel.cidade}</p>
-            <p className="text-green-700 font-bold">
-              R$ {Number(imovel.preco).toLocaleString('pt-BR')}
-            </p>
-            <p className="text-sm">
-              {imovel.operacao === 'comprar' ? 'À venda' : 'Para alugar'}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <Paginacao
-        totalItems={destaques.length}
-        currentPage={paginaAtual}
-        onPageChange={setPaginaAtual}
-      />
-    </section>
-  );
-};
-
 const NavegacaoImoveis: React.FC<{
   titulo: string;
   imoveis: Imovel[];
 }> = ({ titulo, imoveis }) => {
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const dadosPagina = Array.isArray(imoveis)
-    ? imoveis.slice((paginaAtual - 1) * ITEMS_PER_PAGE, paginaAtual * ITEMS_PER_PAGE)
-    : [];
+  const dadosPagina = imoveis.slice((paginaAtual - 1) * ITEMS_PER_PAGE, paginaAtual * ITEMS_PER_PAGE);
 
   return (
     <section className="max-w-7xl mx-auto mb-12" id="imoveis">
@@ -295,6 +220,62 @@ const NavegacaoImoveis: React.FC<{
   );
 };
 
+const Destaques: React.FC = () => {
+  const [destaques, setDestaques] = useState<Imovel[]>([]);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+
+  useEffect(() => {
+    const fetchDestaques = async () => {
+      try {
+        const res = await fetch('/api/imoveis/destaque');
+        const data = await res.json();
+        setDestaques(Array.isArray(data) ? data : []);
+      } catch {
+        setDestaques([]);
+      }
+    };
+    fetchDestaques();
+  }, []);
+
+  const dadosPagina = destaques.slice((paginaAtual - 1) * ITEMS_PER_PAGE, paginaAtual * ITEMS_PER_PAGE);
+
+  return (
+    <section className="bg-gray-100 py-8">
+      <h2 className="text-3xl font-bold text-center mb-6">Imóveis em Destaque</h2>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto px-4">
+        {dadosPagina.map((imovel) => (
+          <div
+            key={imovel.id}
+            className="border rounded shadow p-4 bg-white hover:scale-[1.02] transition"
+          >
+            <Link href={`/imovel/${imovel.id}`}>
+              <img
+                src={getFotoUrl(imovel.fotos) || 'https://picsum.photos/600/400'}
+                alt={`Foto do imóvel em ${imovel.bairro ?? 'localização'}`}
+                className="h-60 w-full object-cover mb-2 rounded cursor-pointer"
+              />
+            </Link>
+            <h3 className="text-xl font-semibold capitalize">{imovel.tipo} - {imovel.bairro}</h3>
+            <p className="text-gray-600">{imovel.cidade}</p>
+            <p className="text-green-700 font-bold">
+              R$ {Number(imovel.preco).toLocaleString('pt-BR')}
+            </p>
+            <p className="text-sm">
+              {imovel.operacao === 'comprar' ? 'À venda' : 'Para alugar'}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <Paginacao
+        totalItems={destaques.length}
+        currentPage={paginaAtual}
+        onPageChange={setPaginaAtual}
+      />
+    </section>
+  );
+};
+
 const HomePage: React.FC = () => {
   const [imoveis, setImoveis] = useState<Imovel[]>([]);
   const [filtros, setFiltros] = useState<Filtros>({
@@ -328,13 +309,17 @@ const HomePage: React.FC = () => {
     buscarImoveis();
   }, [buscarImoveis]);
 
+  const imoveisVenda = imoveis.filter((i) => i.operacao === 'comprar');
+  const imoveisAluguel = imoveis.filter((i) => i.operacao === 'alugar');
+
   return (
     <>
       <BannerRotativo>
         <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={buscarImoveis} />
       </BannerRotativo>
       <Destaques />
-      <NavegacaoImoveis titulo="Imóveis Encontrados" imoveis={imoveis} />
+      <NavegacaoImoveis titulo="Imóveis à Venda" imoveis={imoveisVenda} />
+      <NavegacaoImoveis titulo="Imóveis para Alugar" imoveis={imoveisAluguel} />
     </>
   );
 };
