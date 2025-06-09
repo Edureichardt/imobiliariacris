@@ -138,7 +138,7 @@ type Imovel = {
   tipo: string;
   endereco: string;
   preco: number | string;
-  fotos?: { url: string }[];
+  fotos?: string[]; // agora é array de strings
   cidade?: string;
   bairro?: string;
   operacao?: string;
@@ -206,9 +206,8 @@ const Destaques: React.FC = () => {
             className="border rounded shadow p-4 bg-white hover:scale-[1.02] transition"
           >
             <Link href={`/imovel/${imovel.id}`}>
-              {/* Poderia usar <Image> também, mas aqui fica img para simples */}
               <img
-                src={imovel.fotos?.[0]?.url || 'https://picsum.photos/600/400'}
+                src={imovel.fotos?.[0] || 'https://picsum.photos/600/400'}
                 alt={`Foto do imóvel em ${imovel.bairro ?? 'localização'}`}
                 className="h-60 w-full object-cover mb-2 rounded cursor-pointer"
               />
@@ -259,7 +258,7 @@ const NavegacaoImoveis: React.FC<{
               >
                 <Link href={`/imovel/${id}`}>
                   <Image
-                    src={fotos?.[0]?.url || 'https://picsum.photos/600/400'}
+                    src={fotos?.[0] || 'https://picsum.photos/600/400'}
                     alt={`Imagem do imóvel ${tipo} em ${bairro}`}
                     width={500}
                     height={300}
@@ -268,15 +267,14 @@ const NavegacaoImoveis: React.FC<{
                 </Link>
                 <div className="p-4">
                   <h3 className="font-bold text-lg mb-1 capitalize">{tipo}</h3>
-                  <p className="text-green-900 mb-1">{endereco}</p>
-                  <p className="font-semibold">
+                  <p className="text-gray-600 mb-1">{endereco}</p>
+                  <p className="text-green-700 font-bold">
                     R$ {Number(preco).toLocaleString('pt-BR')}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-
           <Paginacao
             totalItems={imoveis.length}
             currentPage={paginaAtual}
@@ -288,7 +286,7 @@ const NavegacaoImoveis: React.FC<{
   );
 };
 
-export default function Page() {
+const HomePage: React.FC = () => {
   const [imoveis, setImoveis] = useState<Imovel[]>([]);
   const [filtros, setFiltros] = useState<Filtros>({
     tipo: '',
@@ -296,53 +294,42 @@ export default function Page() {
     bairro: '',
     operacao: '',
   });
-  const [imoveisFiltrados, setImoveisFiltrados] = useState<Imovel[]>([]);
+
+  const buscarImoveis = useCallback(async () => {
+    try {
+      let url = '/api/imoveis';
+      const queryParams: string[] = [];
+
+      if (filtros.tipo) queryParams.push(`tipo=${encodeURIComponent(filtros.tipo)}`);
+      if (filtros.cidade) queryParams.push(`cidade=${encodeURIComponent(filtros.cidade)}`);
+      if (filtros.bairro) queryParams.push(`bairro=${encodeURIComponent(filtros.bairro)}`);
+      if (filtros.operacao) queryParams.push(`operacao=${encodeURIComponent(filtros.operacao)}`);
+
+      if (queryParams.length > 0) url += '?' + queryParams.join('&');
+
+      const res = await fetch(url);
+      const data = await res.json();
+      setImoveis(data);
+    } catch (error) {
+      setImoveis([]);
+    }
+  }, [filtros]);
 
   useEffect(() => {
-    async function fetchImoveis() {
-      try {
-        const res = await fetch('/api/imoveis');
-        const data = await res.json();
-        if (res.ok) {
-          const ativos = data.filter((i: Imovel) => i.ativo);
-          setImoveis(ativos);
-          setImoveisFiltrados(ativos);
-        } else {
-          throw new Error('Erro na resposta');
-        }
-      } catch {
-        setImoveis([]);
-        setImoveisFiltrados([]);
-      }
-    }
-    fetchImoveis();
-  }, []);
-
-  const aplicarFiltros = useCallback(() => {
-    let resultado = [...imoveis];
-    if (filtros.tipo) resultado = resultado.filter((i) => i.tipo === filtros.tipo);
-    if (filtros.cidade) resultado = resultado.filter((i) => i.cidade === filtros.cidade);
-    if (filtros.bairro)
-      resultado = resultado.filter((i) =>
-        i.bairro?.toLowerCase().includes(filtros.bairro.toLowerCase())
-      );
-    if (filtros.operacao) resultado = resultado.filter((i) => i.operacao === filtros.operacao);
-    setImoveisFiltrados(resultado);
-  }, [filtros, imoveis]);
-
-  const imoveisCompra = imoveisFiltrados.filter((i) => i.operacao === 'comprar');
-  const imoveisAluguel = imoveisFiltrados.filter((i) => i.operacao === 'alugar');
+    buscarImoveis();
+  }, [buscarImoveis]);
 
   return (
-    <main>
+    <>
       <BannerRotativo>
-        <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={aplicarFiltros} />
+        <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={buscarImoveis} />
       </BannerRotativo>
 
       <Destaques />
 
-      <NavegacaoImoveis titulo="Imóveis para Compra" imoveis={imoveisCompra} />
-      <NavegacaoImoveis titulo="Imóveis para Aluguel" imoveis={imoveisAluguel} />
-    </main>
+      <NavegacaoImoveis titulo="Imóveis encontrados" imoveis={imoveis} />
+    </>
   );
-}
+};
+
+export default HomePage;
