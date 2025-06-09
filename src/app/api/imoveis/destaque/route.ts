@@ -19,7 +19,9 @@ export async function GET() {
     const destaquesFiltrados = destaques.map(imovel => ({
       ...imovel,
       fotos: Array.isArray(imovel.fotos)
-        ? imovel.fotos.filter(f => f.url && f.url.trim() !== '')
+        ? imovel.fotos
+            .filter(f => f.url && f.url.trim() !== '')
+            .map(f => f.url) // converte para array de strings
         : [],
     }));
 
