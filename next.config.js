@@ -23,6 +23,11 @@ const nextConfig = {
   devIndicators: {
     buildActivity: false,
   },
+  api: {
+    bodyParser: {
+      sizeLimit: '25mb', // aumentar aqui para o tamanho que quiser
+    },
+  },
 };
 
 module.exports = nextConfig;
