@@ -9,11 +9,13 @@ export async function GET() {
       include: { fotos: true },
     });
 
-    // Garante que fotos seja sempre array e filtra URLs vazias ou nulas
+    // Converte fotos para array de URLs (strings)
     const imoveisFiltrados = imoveis.map(imovel => ({
       ...imovel,
       fotos: Array.isArray(imovel.fotos)
-        ? imovel.fotos.filter(foto => foto.url && foto.url.trim() !== '')
+        ? imovel.fotos
+            .filter(foto => foto.url && foto.url.trim() !== '')
+            .map(foto => foto.url)
         : [],
     }));
 
@@ -69,4 +71,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Erro ao cadastrar imóvel' }, { status: 500 });
   }
 }
-
