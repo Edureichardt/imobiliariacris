@@ -15,14 +15,12 @@ type Filtros = {
   operacao: string;
 };
 
-type Foto = { url: string };
-
 type Imovel = {
   id: string | number;
   tipo: string;
   endereco: string;
   preco: number | string;
-  fotos?: (string | Foto)[];
+  fotos?: string[]; // atualizado aqui
   cidade?: string;
   bairro?: string;
   operacao?: string;
@@ -47,9 +45,7 @@ const Pesquisa: React.FC<{
   setFiltros: React.Dispatch<React.SetStateAction<Filtros>>;
   onSearch: () => void;
 }> = ({ filtros, setFiltros, onSearch }) => {
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFiltros((prev) => ({ ...prev, [name]: value }));
   };
@@ -178,13 +174,8 @@ const Paginacao: React.FC<{
   );
 };
 
-const getFotoUrl = (fotos?: (string | Foto)[]) => {
-  if (!Array.isArray(fotos) || fotos.length === 0) return null;
-  const primeira = fotos[0];
-  if (typeof primeira === 'string') return primeira;
-  if (typeof primeira === 'object' && primeira !== null && 'url' in primeira)
-    return primeira.url;
-  return null;
+const getFotoUrl = (fotos?: string[]) => {
+  return Array.isArray(fotos) && fotos.length > 0 ? fotos[0] : null;
 };
 
 const Destaques: React.FC = () => {
@@ -196,8 +187,12 @@ const Destaques: React.FC = () => {
       try {
         const res = await fetch('/api/imoveis/destaque');
         const data = await res.json();
-        setDestaques(data);
-        setPaginaAtual(1);
+        if (Array.isArray(data)) {
+          setDestaques(data);
+          setPaginaAtual(1);
+        } else {
+          setDestaques([]);
+        }
       } catch {
         setDestaques([]);
       }
@@ -205,8 +200,9 @@ const Destaques: React.FC = () => {
     fetchDestaques();
   }, []);
 
-  const startIndex = (paginaAtual - 1) * ITEMS_PER_PAGE;
-  const dadosPagina = destaques.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const dadosPagina = Array.isArray(destaques)
+    ? destaques.slice((paginaAtual - 1) * ITEMS_PER_PAGE, paginaAtual * ITEMS_PER_PAGE)
+    : [];
 
   return (
     <section className="bg-gray-100 py-8">
@@ -252,13 +248,14 @@ const NavegacaoImoveis: React.FC<{
   imoveis: Imovel[];
 }> = ({ titulo, imoveis }) => {
   const [paginaAtual, setPaginaAtual] = useState(1);
-  const startIndex = (paginaAtual - 1) * ITEMS_PER_PAGE;
-  const dadosPagina = imoveis.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const dadosPagina = Array.isArray(imoveis)
+    ? imoveis.slice((paginaAtual - 1) * ITEMS_PER_PAGE, paginaAtual * ITEMS_PER_PAGE)
+    : [];
 
   return (
     <section className="max-w-7xl mx-auto mb-12" id="imoveis">
       <h2 className="text-3xl font-semibold mb-6">{titulo}</h2>
-      {imoveis.length === 0 ? (
+      {dadosPagina.length === 0 ? (
         <p className="text-center">Nenhum imóvel encontrado.</p>
       ) : (
         <>
@@ -321,8 +318,8 @@ const HomePage: React.FC = () => {
 
       const res = await fetch(url);
       const data = await res.json();
-      setImoveis(data);
-    } catch (error) {
+      setImoveis(Array.isArray(data) ? data : []);
+    } catch {
       setImoveis([]);
     }
   }, [filtros]);
