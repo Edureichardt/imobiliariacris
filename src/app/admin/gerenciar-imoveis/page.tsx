@@ -21,8 +21,10 @@ export default function GerenciarImoveis() {
 
   useEffect(() => {
     async function fetchImoveis() {
+      console.log('Buscando imóveis no useEffect...');
       const res = await fetch('/api/imoveis?admin=true');
       const data = await res.json();
+      console.log('Imóveis carregados:', data);
       setImoveis(data);
     }
 
@@ -30,17 +32,22 @@ export default function GerenciarImoveis() {
   }, []);
 
   const toggleAtivo = async (id: string) => {
+    console.log('toggleAtivo chamado para id:', id);
     setLoadingId(id);
-    const res = await fetch(`/api/imoveis/${id}/ativar-desativar`, { method: 'PATCH' });
+    const res = await fetch(`/api/imoveis/${id}/ativar-desativar`, {
+      method: 'PATCH',
+    });
 
     if (res.ok) {
       const atualizado = await res.json();
+      console.log('Resposta do servidor ao ativar/desativar:', atualizado);
       setImoveis(prev =>
         prev.map(imovel =>
           imovel.id === id ? { ...imovel, ativo: atualizado.ativo } : imovel
         )
       );
     } else {
+      console.error('Erro ao atualizar o imóvel. Status:', res.status);
       alert('Erro ao atualizar o imóvel.');
     }
 

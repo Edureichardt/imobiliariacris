@@ -309,8 +309,8 @@ const HomePage: React.FC = () => {
     buscarImoveis();
   }, [buscarImoveis]);
 
-  const imoveisVenda = imoveis.filter((i) => i.operacao === 'comprar');
-  const imoveisAluguel = imoveis.filter((i) => i.operacao === 'alugar');
+  const imoveisVenda = imoveis.filter((i) => i.operacao === 'comprar' && i.ativo !== false);
+  const imoveisAluguel = imoveis.filter((i) => i.operacao === 'alugar' && i.ativo !== false);
 
   return (
     <>
