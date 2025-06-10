@@ -7,6 +7,9 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 
 export async function POST(req: Request) {
   try {
@@ -46,8 +49,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Erro no upload de vídeo' }, { status: 500 });
   }
 }
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
