@@ -9,7 +9,7 @@ type Imovel = {
   cidade: string;
   endereco: string;
   preco: number;
-  fotos: { url: string }[];
+  fotos: string[];
   ativo: boolean;
 };
 
@@ -119,7 +119,7 @@ export default function ExcluirImoveis() {
           {imoveisFiltrados.map(imovel => (
             <div key={imovel.id} className="border rounded shadow p-4">
               <Image
-                src={imovel.fotos?.[0] || 'https://picsum.photos/400/300'}
+                  src={imovel.fotos?.[0]}
                 alt={imovel.tipo}
                 width={400}
                 height={300}

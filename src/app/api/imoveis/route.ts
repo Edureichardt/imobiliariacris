@@ -1,15 +1,27 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/app/lib/prisma';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    console.log('Buscando imóveis...');
+    console.log('Buscando imóveis com filtros...');
+    const { searchParams } = new URL(req.url);
+
+    const tipo = searchParams.get('tipo') || undefined;
+    const cidade = searchParams.get('cidade') || undefined;
+    const bairro = searchParams.get('bairro') || undefined;
+    const operacao = searchParams.get('operacao') || undefined;
+
     const imoveis = await prisma.imovel.findMany({
+      where: {
+        ...(tipo && { tipo: { equals: tipo, mode: 'insensitive' } }),
+        ...(cidade && { cidade: { equals: cidade, mode: 'insensitive' } }),
+        ...(bairro && { bairro: { contains: bairro, mode: 'insensitive' } }),
+        ...(operacao && { operacao: { equals: operacao, mode: 'insensitive' } }),
+      },
       orderBy: { criadoEm: 'desc' },
       include: { fotos: true },
     });
 
-    // Converte fotos para array de URLs (strings)
     const imoveisFiltrados = imoveis.map(imovel => ({
       ...imovel,
       fotos: Array.isArray(imovel.fotos)
@@ -33,11 +45,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log('Recebendo dados para cadastro:', body);
 
-    // Garante que preco seja string antes de aplicar replace
     const precoString = typeof body.preco === 'string' ? body.preco : String(body.preco ?? '');
     const precoNumerico = parseFloat(precoString.replace(/[^\d,]/g, '').replace(',', '.'));
 
-    // Validação simples precoNumerico
     if (isNaN(precoNumerico)) {
       return NextResponse.json({ error: 'Preço inválido' }, { status: 400 });
     }
@@ -51,9 +61,8 @@ export async function POST(req: Request) {
         bairro: body.bairro,
         endereco: body.endereco,
         preco: precoNumerico,
-        destaque: body.destaque ?? false,  // default false se undefined
+        destaque: body.destaque ?? false,
         tourUrl: body.videoTour ?? null,
-
         fotos: {
           create: Array.isArray(body.fotos)
             ? body.fotos.map((url: string) => ({ url }))

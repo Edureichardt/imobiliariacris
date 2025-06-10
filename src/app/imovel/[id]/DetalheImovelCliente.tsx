@@ -2,15 +2,11 @@
 
 import { useState } from 'react';
 import {
-  BedDouble,
-  Bath,
-  Ruler,
   MapPin,
-  CircleDollarSign,
   X,
-} from 'lucide-react'; // removi Share2 daqui
+} from 'lucide-react';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
-import Link from 'next/link'; // importe Link do next/link
+import Link from 'next/link';
 
 export interface Foto {
   id: string;
@@ -26,9 +22,6 @@ export interface Imovel {
   cidade: string;
   preco: number;
   descricao?: string;
-  quartos?: number;
-  banheiros?: number;
-  area?: number;
   fotos: Foto[];
   tourUrl?: string;
 }
@@ -59,7 +52,6 @@ function ModalImagens({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50 p-4">
-      {/* Botão fechar */}
       <button
         onClick={fecharModal}
         className="absolute top-4 right-4 text-white p-2 rounded-full hover:bg-gray-700 transition"
@@ -68,10 +60,7 @@ function ModalImagens({
         <X size={32} />
       </button>
 
-      {/* Imagem grande */}
-      <div
-        className={`relative max-w-[90vw] max-h-[80vh] flex items-center justify-center overflow-hidden`}
-      >
+      <div className="relative max-w-[90vw] max-h-[80vh] flex items-center justify-center overflow-hidden">
         <img
           src={fotos[fotoAtualIndex].url}
           alt={`Foto ${fotoAtualIndex + 1}`}
@@ -83,7 +72,6 @@ function ModalImagens({
           style={{ maxHeight: '80vh', maxWidth: '90vw', objectFit: 'contain' }}
         />
 
-        {/* Botões navegação */}
         <button
           onClick={irAnterior}
           className="absolute left-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r hover:bg-opacity-80 transition select-none"
@@ -99,7 +87,6 @@ function ModalImagens({
           ›
         </button>
 
-        {/* Botão zoom */}
         <button
           onClick={() => setZoom(!zoom)}
           className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-80 transition select-none"
@@ -111,7 +98,6 @@ function ModalImagens({
         </button>
       </div>
 
-      {/* Miniaturas */}
       <div className="flex gap-2 mt-4 overflow-x-auto max-w-[90vw]">
         {fotos.map((foto, index) => (
           <button
@@ -145,27 +131,21 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
   const [fotoAtual, setFotoAtual] = useState(imovel.fotos[0]?.url || '');
   const [modalAberto, setModalAberto] = useState(false);
   const [fotoModalIndex, setFotoModalIndex] = useState(0);
+  const [instaCopiado, setInstaCopiado] = useState(false);
 
-  const zapNumeroDono = '554791648594'; // número do dono da imobiliária
-  const mensagemZapDono = `Olá, gostaria de mais informações sobre o imóvel: ${imovel.tipo} para ${imovel.operacao}, localizado em ${imovel.endereco}, ${imovel.bairro} - ${imovel.cidade}, com preço de R$ ${imovel.preco.toLocaleString(
-    'pt-BR'
-  )}.`;
+  const zapNumeroDono = '554791648594';
+  const mensagemZapDono = `Olá, gostaria de mais informações sobre o imóvel: ${imovel.tipo} para ${imovel.operacao}, localizado em ${imovel.endereco}, ${imovel.bairro} - ${imovel.cidade}, com preço de R$ ${imovel.preco.toLocaleString('pt-BR')}.`;
 
   const mensagemCompartilhar = `Confira este imóvel: ${imovel.tipo} para ${imovel.operacao} em ${imovel.cidade}.\nPreço: R$ ${imovel.preco.toLocaleString(
     'pt-BR'
   )}\n${imovel.endereco}, ${imovel.bairro}\nVeja as fotos e detalhes!`;
 
   const linkImovel = typeof window !== 'undefined' ? window.location.href : '';
-
   const whatsappShareLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(
     mensagemCompartilhar + '\n' + linkImovel
   )}`;
-
   const instagramPerfil = 'https://www.instagram.com/ca_imoveisbr/';
-
-  const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-    linkImovel
-  )}`;
+  const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkImovel)}`;
 
   const abrirModal = (url: string) => {
     const index = imovel.fotos.findIndex((foto) => foto.url === url);
@@ -173,19 +153,28 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
     setModalAberto(true);
   };
 
-  const fecharModal = () => {
-    setModalAberto(false);
-  };
+  const fecharModal = () => setModalAberto(false);
 
-  // Endereço codificado para o Google Maps
   const enderecoParaMapa = encodeURIComponent(
     `${imovel.endereco}, ${imovel.bairro}, ${imovel.cidade}`
   );
 
+  // Função para compartilhar no Instagram: copia link e abre perfil
+  const compartilharNoInstagram = () => {
+    if (!navigator.clipboard) {
+      alert('Seu navegador não suporta copiar para área de transferência.');
+      return;
+    }
+    navigator.clipboard.writeText(linkImovel).then(() => {
+      setInstaCopiado(true);
+      window.open(instagramPerfil, '_blank');
+      setTimeout(() => setInstaCopiado(false), 3000);
+    });
+  };
+
   return (
     <main className="w-full p-6 bg-white">
       <div className="mb-6">
-        {/* Troquei <a> por <Link> */}
         <Link
           href="/"
           className="inline-block bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
@@ -282,7 +271,6 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
             </section>
           )}
 
-          {/* MAPA */}
           <section className="mt-6">
             <h3 className="text-xl font-semibold text-green-900 mb-2">Localização</h3>
             <div className="w-full aspect-video rounded-lg overflow-hidden border border-green-800 shadow-md">
@@ -300,7 +288,6 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
 
         {/* Dados do imóvel */}
         <div className="flex-1 flex flex-col gap-6">
-          {/* Botão "Mais Informações" */}
           <div>
             <a
               href={`https://api.whatsapp.com/send?phone=${zapNumeroDono}&text=${encodeURIComponent(
@@ -319,31 +306,18 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
               R$ {imovel.preco.toLocaleString('pt-BR')}
             </h2>
 
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-2 text-green-900">
-              <li className="flex items-center gap-2">
-                <BedDouble size={24} />
-                {imovel.quartos ?? 'N/A'} quartos
-              </li>
-              <li className="flex items-center gap-2">
-                <Bath size={24} />
-                {imovel.banheiros ?? 'N/A'} banheiros
-              </li>
-              <li className="flex items-center gap-2">
-                <Ruler size={24} />
-                {imovel.area ? `${imovel.area} m²` : 'Área não informada'}
-              </li>
+            <ul className="grid grid-cols-1 gap-y-2 text-green-900">
               <li className="flex items-center gap-2">
                 <MapPin size={24} />
-                {imovel.bairro}, {imovel.cidade}
+                {imovel.endereco}, {imovel.bairro}, {imovel.cidade}
               </li>
             </ul>
 
             {imovel.descricao && (
-              <p className="mt-6 whitespace-pre-line text-green-900">{imovel.descricao}</p>
+              <p className="mt-6 whitespace-pre-wrap text-green-900">{imovel.descricao}</p>
             )}
           </div>
 
-          {/* Botões compartilhar */}
           <div className="flex gap-4 mt-auto">
             <a
               href={whatsappShareLink}
@@ -354,15 +328,16 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
             >
               <FaWhatsapp size={20} /> WhatsApp
             </a>
-            <a
-              href={instagramPerfil}
-              target="_blank"
-              rel="noopener noreferrer"
+
+            <button
+              onClick={compartilharNoInstagram}
               className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
-              title="Instagram da imobiliária"
+              title="Compartilhar no Instagram"
+              type="button"
             >
               <FaInstagram size={20} /> Instagram
-            </a>
+            </button>
+
             <a
               href={facebookShareLink}
               target="_blank"
@@ -376,7 +351,6 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
         </div>
       </div>
 
-      {/* Modal de imagens */}
       {modalAberto && (
         <ModalImagens
           fotos={imovel.fotos}
@@ -384,6 +358,12 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
           setFotoAtualIndex={setFotoModalIndex}
           fecharModal={fecharModal}
         />
+      )}
+
+      {instaCopiado && (
+        <div className="fixed bottom-4 right-4 bg-green-900 text-white px-4 py-2 rounded shadow-lg">
+          Link copiado! Agora cole no Instagram para compartilhar.
+        </div>
       )}
     </main>
   );
