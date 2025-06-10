@@ -46,3 +46,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Erro no upload de vídeo' }, { status: 500 });
   }
 }
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
