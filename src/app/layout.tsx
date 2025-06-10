@@ -17,6 +17,9 @@ const geistMono = Roboto_Mono({
 export const metadata: Metadata = {
   title: 'CA Imóveis',
   description: 'Seu portal de imóveis',
+  icons: {
+    icon: '/favicon.ico', // <- Aqui está o favicon
+  },
 };
 
 export default function RootLayout({
