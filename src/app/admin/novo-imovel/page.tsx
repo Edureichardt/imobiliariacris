@@ -103,34 +103,52 @@ export default function CadastroImovel() {
   };
 
   const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!(e.target.files instanceof FileList)) return;
-    const file = e.target.files[0];
-    if (!file) return;
+    const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  if (!(e.target.files instanceof FileList)) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    setUploadingVideo(true);
-    setMessage('');
+  // Verifica tipo e tamanho
+  if (!file.type.startsWith('video/')) {
+    setMessage('Por favor, envie um arquivo de vídeo.');
+    return;
+  }
 
-    try {
-      const formData = new FormData();
-      formData.append('video', file);
+  if (file.size > 100 * 1024 * 1024) {
+    setMessage('O vídeo deve ter no máximo 100MB.');
+    return;
+  }
 
-      const res = await fetch('/api/upload-video', {
-        method: 'POST',
-        body: formData,
-      });
+  setUploadingVideo(true);
+  setMessage('');
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Falha no upload do vídeo');
-      if (!data.url) throw new Error('URL do vídeo não retornada');
+  try {
+    const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dkh7chlyx/video/upload';
+    const UPLOAD_PRESET = 'Uploadimoveis';
 
-      setForm(prev => ({ ...prev, tourUrl: data.url }));
-      setMessage('Vídeo enviado com sucesso!');
-    } catch (error) {
-      setMessage((error as Error).message || 'Erro ao enviar vídeo.');
-    } finally {
-      setUploadingVideo(false);
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('Uploadimoveis', UPLOAD_PRESET);
+
+    const res = await fetch(CLOUDINARY_UPLOAD_URL, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.secure_url) {
+      throw new Error(data.error?.message || 'Erro ao enviar vídeo para o Cloudinary.');
     }
-  };
+  
+    setForm(prev => ({ ...prev, tourUrl: data.secure_url }));
+    setMessage('Vídeo enviado com sucesso!');
+  } catch (error) {
+    setMessage((error as Error).message || 'Erro ao enviar vídeo.');
+  } finally {
+    setUploadingVideo(false);
+  }
+};
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
