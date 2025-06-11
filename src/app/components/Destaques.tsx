@@ -18,9 +18,10 @@ export default function Destaques() {
   useEffect(() => {
     const fetchDestaques = async () => {
       try {
-        const res = await fetch('/api/imoveis/destaque');
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const res = await fetch(`${baseUrl}/api/imoveis/destaque`);
         const data = await res.json();
-        setDestaques(data);
+        setDestaques(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error('Erro ao buscar destaques:', error);
       }
