@@ -227,10 +227,13 @@ const Destaques: React.FC = () => {
   useEffect(() => {
     const fetchDestaques = async () => {
       try {
-        const res = await fetch('/api/imoveis/destaque');
-        const data = await res.json();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/imoveis/destaque`);
+
+        const data = await res.json();git add .
+
         setDestaques(Array.isArray(data) ? data : []);
       } catch {
+        console.error('Erro ao buscar destaques:', err);
         setDestaques([]);
       }
     };
