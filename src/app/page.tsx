@@ -227,7 +227,7 @@ const Destaques: React.FC = () => {
   useEffect(() => {
     const fetchDestaques = async () => {
       try {
-        const res = await fetch('/api/imoveis/destaque', { cache: 'no-store' });
+        const res = await fetch(`/api/imoveis/destaque?ts=${Date.now()}`, { cache: 'no-store' });
 
 
 
