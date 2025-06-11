@@ -43,7 +43,7 @@ export async function GET() {
 
     return NextResponse.json(destaquesFiltrados, {
   headers: {
-    'Cache-Control': 'no-store',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
   },
 });
 
