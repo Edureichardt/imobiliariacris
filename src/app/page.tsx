@@ -232,7 +232,7 @@ const Destaques: React.FC = () => {
         const data = await res.json();
 
         setDestaques(Array.isArray(data) ? data : []);
-      } catch {
+      } catch (err) {
         console.error('Erro ao buscar destaques:', err);
         setDestaques([]);
       }
