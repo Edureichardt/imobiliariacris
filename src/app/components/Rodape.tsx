@@ -45,7 +45,7 @@ const Rodape = () => {
                 rel="noopener noreferrer"
                 className="hover:underline hover:text-green-300"
               >
-                (47) 9164-8594
+                (47) 99164-8594
               </a>
             </p>
             <p className="flex items-center gap-2">
