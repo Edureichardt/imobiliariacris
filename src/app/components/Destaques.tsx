@@ -18,8 +18,7 @@ export default function Destaques() {
   useEffect(() => {
     const fetchDestaques = async () => {
       try {
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        const res = await fetch(`${baseUrl}/api/imoveis/destaque`);
+        const res = await fetch('/api/imoveis/destaque');
         const data = await res.json();
         setDestaques(Array.isArray(data) ? data : []);
       } catch (error) {
@@ -47,7 +46,9 @@ export default function Destaques() {
               <div className="p-4">
                 <h4 className="text-xl font-bold mb-2">{imovel.tipo} - {imovel.bairro}</h4>
                 <p className="mb-2">{imovel.descricao}</p>
-                <p className="font-semibold text-green-800">R$ {imovel.preco.toLocaleString('pt-BR')}</p>
+                <p className="font-semibold text-green-800">
+                  R$ {imovel.preco.toLocaleString('pt-BR')}
+                </p>
               </div>
             </div>
           ))}
