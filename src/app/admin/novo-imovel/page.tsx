@@ -103,7 +103,8 @@ export default function CadastroImovel() {
   };
 
   const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    
+
   if (!(e.target.files instanceof FileList)) return;
   const file = e.target.files[0];
   if (!file) return;
@@ -128,7 +129,7 @@ export default function CadastroImovel() {
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('Uploadimoveis', UPLOAD_PRESET);
+    formData.append('upload_preset', UPLOAD_PRESET);
 
     const res = await fetch(CLOUDINARY_UPLOAD_URL, {
       method: 'POST',
@@ -148,7 +149,7 @@ export default function CadastroImovel() {
     setUploadingVideo(false);
   }
 };
-  }
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
