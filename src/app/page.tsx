@@ -229,7 +229,7 @@ const Destaques: React.FC = () => {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/imoveis/destaque`);
 
-        const data = await res.json();git add .
+        const data = await res.json();
 
         setDestaques(Array.isArray(data) ? data : []);
       } catch {
