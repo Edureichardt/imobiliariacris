@@ -62,7 +62,7 @@ export async function POST(req: Request) {
         endereco: body.endereco,
         preco: precoNumerico,
         destaque: body.destaque ?? false,
-        tourUrl: body.videoTour ?? null,
+        tourUrl: body.tourUrl ?? null,
         fotos: {
           create: Array.isArray(body.fotos)
             ? body.fotos.map((url: string) => ({ url }))

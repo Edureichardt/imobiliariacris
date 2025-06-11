@@ -128,6 +128,7 @@ function ModalImagens({
 }
 
 export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
+  console.log(imovel.tourUrl);
   const [fotoAtual, setFotoAtual] = useState(imovel.fotos[0]?.url || '');
   const [modalAberto, setModalAberto] = useState(false);
   const [fotoModalIndex, setFotoModalIndex] = useState(0);
@@ -256,20 +257,27 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
             )}
           </div>
 
-          {imovel.tourUrl && (
-            <section className="mt-6">
-              <h3 className="text-xl font-semibold text-green-900 mb-2">Tour pelo imóvel</h3>
-              <div className="aspect-video w-full rounded-lg overflow-hidden border border-green-800 shadow-md">
-                <iframe
-                  src={imovel.tourUrl}
-                  title="Tour pelo imóvel"
-                  allowFullScreen
-                  className="w-full h-full"
-                  frameBorder="0"
-                />
-              </div>
-            </section>
-          )}
+      {imovel.tourUrl && (
+  <div className="aspect-video w-full rounded-lg overflow-hidden border border-green-800 shadow-md">
+    {/\.(mp4|webm|ogg)$/i.test(imovel.tourUrl) || imovel.tourUrl.includes('res.cloudinary.com') ? (
+      <video controls className="w-full h-full" preload="metadata">
+        <source src={imovel.tourUrl} />
+        Seu navegador não suporta vídeo.
+      </video>
+    ) : (
+      <iframe
+        src={imovel.tourUrl}
+        title="Tour pelo imóvel"
+        allowFullScreen
+        className="w-full h-full"
+        frameBorder="0"
+      />
+    )}
+  </div>
+)}
+
+
+
 
           <section className="mt-6">
             <h3 className="text-xl font-semibold text-green-900 mb-2">Localização</h3>
