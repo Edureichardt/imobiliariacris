@@ -41,7 +41,12 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json(destaquesFiltrados);
+    return NextResponse.json(destaquesFiltrados, {
+  headers: {
+    'Cache-Control': 'no-store',
+  },
+});
+
   } catch (error) {
     console.error('Erro ao buscar destaques:', error);
     if (error instanceof Error) console.error(error.stack);
