@@ -227,7 +227,8 @@ const Destaques: React.FC = () => {
   useEffect(() => {
     const fetchDestaques = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/imoveis/destaque`);
+        const res = await fetch('/api/imoveis/destaque');
+
 
         const data = await res.json();
 

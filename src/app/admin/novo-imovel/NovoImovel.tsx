@@ -13,7 +13,7 @@ export default function CadastroImovel() {
     endereco: '',
     preco: '',
     fotos: [] as string[],
-    destaque: true,
+    destaque: false,
     tourUrl: '',
   });
 
