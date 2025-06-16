@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: 'CA Imóveis',
   description: 'Seu portal de imóveis',
   icons: {
-    icon: '/favicon.ico', // <- Aqui está o favicon
+    icon: '/favicon.ico',
   },
 };
 
@@ -29,6 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt">
+      <head>
+        <meta
+          name="google-site-verification"
+          content="LRBP7xDyhJN7nIQ5s0JWo3R1rmDJW5u2A3An8KASHII"
+        />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Header />
         <main>{children}</main>
