@@ -1,3 +1,4 @@
+// src/app/head.tsx
 export default function Head() {
   return (
     <>
@@ -5,6 +6,8 @@ export default function Head() {
         name="google-site-verification"
         content="LRBP7xDyhJN7nIQ5s0JWo3R1rmDJW5u2A3An8KASHII"
       />
+      <title>CA Imóveis</title>
+      <meta name="description" content="Seu portal de imóveis" />
     </>
   );
 }
