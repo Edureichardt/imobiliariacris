@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   title: 'CA Imóveis',
   description: 'Seu portal de imóveis',
   icons: {
-    icon: '/favicon.ico', // <- Aqui está o favicon
+    icon: '/favicon.ico',
   },
 };
 
