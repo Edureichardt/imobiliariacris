@@ -8,6 +8,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+
 type Filtros = {
   tipo: string;
   cidade: string;
