@@ -16,6 +16,10 @@ export default function Sidebar() {
         <Link href="/admin/excluirImovel"className="block hover:underline">
       Excluir imovel
       </Link>
+      <Link href="/admin/editar-imoveis" className="block hover:underline">
+      Editar Imóveis
+      </Link>
+
       </nav>
       
       <div>
