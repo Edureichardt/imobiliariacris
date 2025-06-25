@@ -48,7 +48,7 @@ export async function PUT(req: Request, { params }: Params) {
     const imovelAtualizado = await prisma.imovel.update({
       where: { id },
       data: {
-        titulo: data.titulo,
+        
         descricao: data.descricao,
         preco: precoNumerico,
         tipo: data.tipo,
