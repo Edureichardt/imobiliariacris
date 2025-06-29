@@ -57,7 +57,7 @@ const Pesquisa: React.FC<{
   };
 
   return (
-    <section className="max-w-7xl mx-auto p-6 bg-white rounded-md shadow-md mb-10 -mt-20 relative z-10">
+    <section className="max-w-7xl mx-auto p-6 bg-white rounded-md shadow-md mb-10 relative z-10 -mt-12 md:-mt-20">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end"
@@ -102,7 +102,7 @@ const Pesquisa: React.FC<{
   );
 };
 
-const BannerRotativo: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+const BannerRotativo: React.FC = () => {
   const imagens = ['/banner1.jpg', '/banner2.jpg', '/banner3.jpg'];
 
   return (
@@ -134,7 +134,6 @@ const BannerRotativo: React.FC<{ children?: React.ReactNode }> = ({ children }) 
           </SwiperSlide>
         ))}
       </Swiper>
-      <div className="absolute bottom-[-80px] w-full">{children}</div>
     </div>
   );
 };
@@ -319,9 +318,8 @@ const HomePage: React.FC = () => {
 
   return (
     <>
-      <BannerRotativo>
-        <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={buscarImoveis} />
-      </BannerRotativo>
+      <BannerRotativo />
+      <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={buscarImoveis} />
 
       {loading ? (
         <Loading />
