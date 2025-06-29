@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-
+import Loading from './components/Loading';
 
 type Filtros = {
   tipo: string;
@@ -229,11 +229,7 @@ const Destaques: React.FC = () => {
     const fetchDestaques = async () => {
       try {
         const res = await fetch(`/api/imoveis/destaque?ts=${Date.now()}`, { cache: 'no-store' });
-
-
-
         const data = await res.json();
-
         setDestaques(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Erro ao buscar destaques:', err);
@@ -272,7 +268,6 @@ const Destaques: React.FC = () => {
           </div>
         ))}
       </div>
-
       <Paginacao
         totalItems={destaques.length}
         currentPage={paginaAtual}
@@ -284,6 +279,7 @@ const Destaques: React.FC = () => {
 
 const HomePage: React.FC = () => {
   const [imoveis, setImoveis] = useState<Imovel[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filtros, setFiltros] = useState<Filtros>({
     tipo: '',
     cidade: '',
@@ -293,6 +289,7 @@ const HomePage: React.FC = () => {
 
   const buscarImoveis = useCallback(async () => {
     try {
+      setLoading(true);
       let url = '/api/imoveis';
       const queryParams: string[] = [];
 
@@ -308,6 +305,8 @@ const HomePage: React.FC = () => {
       setImoveis(Array.isArray(data) ? data : []);
     } catch {
       setImoveis([]);
+    } finally {
+      setLoading(false);
     }
   }, [filtros]);
 
@@ -323,9 +322,16 @@ const HomePage: React.FC = () => {
       <BannerRotativo>
         <Pesquisa filtros={filtros} setFiltros={setFiltros} onSearch={buscarImoveis} />
       </BannerRotativo>
-      <Destaques />
-      <NavegacaoImoveis titulo="Imóveis à Venda" imoveis={imoveisVenda} />
-      <NavegacaoImoveis titulo="Imóveis para Alugar" imoveis={imoveisAluguel} />
+
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <Destaques />
+          <NavegacaoImoveis titulo="Imóveis à Venda" imoveis={imoveisVenda} />
+          <NavegacaoImoveis titulo="Imóveis para Alugar" imoveis={imoveisAluguel} />
+        </>
+      )}
     </>
   );
 };
