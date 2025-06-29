@@ -1,10 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  MapPin,
-  X,
-} from 'lucide-react';
+import { MapPin, X } from 'lucide-react';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 import Link from 'next/link';
 
@@ -74,14 +71,14 @@ function ModalImagens({
 
         <button
           onClick={irAnterior}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-r hover:bg-opacity-80 transition select-none"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-r hover:bg-opacity-80 transition select-none"
           aria-label="Imagem anterior"
         >
           ‹
         </button>
         <button
           onClick={irProximo}
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-l hover:bg-opacity-80 transition select-none"
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-l hover:bg-opacity-80 transition select-none"
           aria-label="Próxima imagem"
         >
           ›
@@ -107,9 +104,7 @@ function ModalImagens({
               setZoom(false);
             }}
             className={`border-2 rounded-lg overflow-hidden flex-shrink-0 w-20 h-20 transition-transform ${
-              fotoAtualIndex === index
-                ? 'border-green-900 scale-110'
-                : 'border-transparent'
+              fotoAtualIndex === index ? 'border-green-900 scale-110' : 'border-transparent'
             }`}
             type="button"
             aria-label={`Ver foto ${index + 1}`}
@@ -128,7 +123,6 @@ function ModalImagens({
 }
 
 export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
-  console.log(imovel.tourUrl);
   const [fotoAtual, setFotoAtual] = useState(imovel.fotos[0]?.url || '');
   const [modalAberto, setModalAberto] = useState(false);
   const [fotoModalIndex, setFotoModalIndex] = useState(0);
@@ -156,11 +150,8 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
 
   const fecharModal = () => setModalAberto(false);
 
-  const enderecoParaMapa = encodeURIComponent(
-    `${imovel.endereco}, ${imovel.bairro}, ${imovel.cidade}`
-  );
+  const enderecoParaMapa = encodeURIComponent(`${imovel.endereco}, ${imovel.bairro}, ${imovel.cidade}`);
 
-  // Função para compartilhar no Instagram: copia link e abre perfil
   const compartilharNoInstagram = () => {
     if (!navigator.clipboard) {
       alert('Seu navegador não suporta copiar para área de transferência.');
@@ -174,7 +165,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
   };
 
   return (
-    <main className="w-full p-6 bg-white">
+    <main className="w-full p-4 md:p-6 bg-white max-w-[100vw]">
       <div className="mb-6">
         <Link
           href="/"
@@ -184,32 +175,33 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
         </Link>
       </div>
 
-      <h1 className="text-4xl font-bold mb-6 text-green-900">
+      <h1 className="text-3xl md:text-4xl font-bold mb-6 text-green-900 leading-tight">
         {imovel.tipo.toUpperCase()} para {imovel.operacao}
       </h1>
 
-      <div className="flex flex-col md:flex-row gap-8 mb-8">
+      <div className="flex flex-col md:flex-row gap-6 md:gap-8">
         {/* Galeria */}
         <div className="flex-1">
           <div className="overflow-hidden rounded-lg border border-green-800 group">
             <img
               src={fotoAtual}
               alt="Foto principal"
-              className="w-full h-[350px] object-cover cursor-pointer group-hover:scale-105 transition-transform duration-300"
+              className="w-full h-64 md:h-[350px] object-cover cursor-pointer group-hover:scale-105 transition-transform duration-300"
               onClick={() => abrirModal(fotoAtual)}
               draggable={false}
             />
           </div>
 
-          <div className="flex gap-4 mt-4 overflow-x-auto">
+          <div className="flex gap-3 mt-3 overflow-x-auto scrollbar-thin scrollbar-thumb-green-900 scrollbar-track-gray-200">
             {(imovel.fotos ?? []).slice(0, 4).map((foto) => (
               <button
                 key={foto.id}
                 onClick={() => setFotoAtual(foto.url)}
-                className={`border-2 rounded-lg overflow-hidden flex-shrink-0 w-24 h-24 transition-transform ${
-                  fotoAtual === foto.url ? 'border-green-900 scale-105' : 'border-transparent'
+                className={`border-2 rounded-lg overflow-hidden flex-shrink-0 w-20 h-20 transition-transform ${
+                  fotoAtual === foto.url ? 'border-green-900 scale-110' : 'border-transparent'
                 }`}
                 type="button"
+                aria-label="Miniatura"
               >
                 <img
                   src={foto.url}
@@ -223,7 +215,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
             {imovel.fotos.length > 5 && (
               <button
                 onClick={() => abrirModal(imovel.fotos[4].url)}
-                className="relative border-2 rounded-lg flex-shrink-0 w-24 h-24 border-transparent bg-black bg-opacity-50 flex items-center justify-center text-white text-xl font-bold"
+                className="relative border-2 rounded-lg flex-shrink-0 w-20 h-20 border-transparent bg-black bg-opacity-50 flex items-center justify-center text-white text-xl font-bold"
                 type="button"
               >
                 <img
@@ -242,8 +234,8 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
               <button
                 key={imovel.fotos[4].id}
                 onClick={() => setFotoAtual(imovel.fotos[4].url)}
-                className={`border-2 rounded-lg overflow-hidden flex-shrink-0 w-24 h-24 transition-transform ${
-                  fotoAtual === imovel.fotos[4].url ? 'border-green-900 scale-105' : 'border-transparent'
+                className={`border-2 rounded-lg overflow-hidden flex-shrink-0 w-20 h-20 transition-transform ${
+                  fotoAtual === imovel.fotos[4].url ? 'border-green-900 scale-110' : 'border-transparent'
                 }`}
                 type="button"
               >
@@ -257,27 +249,24 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
             )}
           </div>
 
-      {imovel.tourUrl && (
-  <div className="aspect-video w-full rounded-lg overflow-hidden border border-green-800 shadow-md">
-    {/\.(mp4|webm|ogg)$/i.test(imovel.tourUrl) || imovel.tourUrl.includes('res.cloudinary.com') ? (
-      <video controls className="w-full h-full" preload="metadata">
-        <source src={imovel.tourUrl} />
-        Seu navegador não suporta vídeo.
-      </video>
-    ) : (
-      <iframe
-        src={imovel.tourUrl}
-        title="Tour pelo imóvel"
-        allowFullScreen
-        className="w-full h-full"
-        frameBorder="0"
-      />
-    )}
-  </div>
-)}
-
-
-
+          {imovel.tourUrl && (
+            <div className="aspect-video w-full rounded-lg overflow-hidden border border-green-800 shadow-md mt-6">
+              {/\.(mp4|webm|ogg)$/i.test(imovel.tourUrl) || imovel.tourUrl.includes('res.cloudinary.com') ? (
+                <video controls className="w-full h-full" preload="metadata">
+                  <source src={imovel.tourUrl} />
+                  Seu navegador não suporta vídeo.
+                </video>
+              ) : (
+                <iframe
+                  src={imovel.tourUrl}
+                  title="Tour pelo imóvel"
+                  allowFullScreen
+                  className="w-full h-full"
+                  frameBorder="0"
+                />
+              )}
+            </div>
+          )}
 
           <section className="mt-6">
             <h3 className="text-xl font-semibold text-green-900 mb-2">Localização</h3>
@@ -296,42 +285,42 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
 
         {/* Dados do imóvel */}
         <div className="flex-1 flex flex-col gap-6">
-          <div>
-            <a
-              href={`https://api.whatsapp.com/send?phone=${zapNumeroDono}&text=${encodeURIComponent(
-                mensagemZapDono
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mb-4 px-6 py-3 bg-green-900 hover:bg-green-800 text-white rounded-full font-semibold transition"
-            >
-              Mais Informações
-            </a>
-          </div>
+          <a
+            href={`https://api.whatsapp.com/send?phone=${zapNumeroDono}&text=${encodeURIComponent(
+              mensagemZapDono
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mb-4 px-6 py-3 bg-green-900 hover:bg-green-800 text-white rounded-full font-semibold transition text-center"
+          >
+            Mais Informações
+          </a>
 
           <div>
             <h2 className="text-3xl font-bold mb-4 text-green-900">
               R$ {imovel.preco.toLocaleString('pt-BR')}
             </h2>
 
-            <ul className="grid grid-cols-1 gap-y-2 text-green-900">
+            <ul className="space-y-2 text-green-900">
               <li className="flex items-center gap-2">
                 <MapPin size={24} />
-                {imovel.endereco}, {imovel.bairro}, {imovel.cidade}
+                <span className="text-sm md:text-base">
+                  {imovel.endereco}, {imovel.bairro}, {imovel.cidade}
+                </span>
               </li>
             </ul>
 
             {imovel.descricao && (
-              <p className="mt-6 whitespace-pre-wrap text-green-900">{imovel.descricao}</p>
+              <p className="mt-6 whitespace-pre-wrap text-green-900 text-sm md:text-base">{imovel.descricao}</p>
             )}
           </div>
 
-          <div className="flex gap-4 mt-auto">
+          <div className="flex flex-wrap gap-3 mt-auto">
             <a
               href={whatsappShareLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
+              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition text-sm md:text-base flex-grow md:flex-grow-0 justify-center"
               title="Compartilhar no WhatsApp"
             >
               <FaWhatsapp size={20} /> WhatsApp
@@ -339,7 +328,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
 
             <button
               onClick={compartilharNoInstagram}
-              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
+              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition text-sm md:text-base flex-grow md:flex-grow-0 justify-center"
               title="Compartilhar no Instagram"
               type="button"
             >
@@ -350,7 +339,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
               href={facebookShareLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition"
+              className="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white px-4 py-2 rounded transition text-sm md:text-base flex-grow md:flex-grow-0 justify-center"
               title="Compartilhar no Facebook"
             >
               <FaFacebook size={20} /> Facebook
@@ -369,7 +358,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
       )}
 
       {instaCopiado && (
-        <div className="fixed bottom-4 right-4 bg-green-900 text-white px-4 py-2 rounded shadow-lg">
+        <div className="fixed bottom-4 right-4 bg-green-900 text-white px-4 py-2 rounded shadow-lg z-50">
           Link copiado! Agora cole no Instagram para compartilhar.
         </div>
       )}
