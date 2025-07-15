@@ -15,7 +15,7 @@ const geistMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'CA Imóveis | Imobiliária em Rio Negro e Mafra',
+  title: 'Imobiliaria CA Imóveis | Imobiliária em Rio Negro e Mafra',
   description:
     'Imobiliária em Rio Negro e Mafra. Casas, apartamentos, terrenos e imóveis comerciais à venda e para alugar com a CA Imóveis.',
   icons: {
