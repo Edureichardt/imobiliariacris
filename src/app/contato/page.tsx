@@ -69,7 +69,7 @@ export default function Contato() {
           <FaInstagram className="text-pink-600" />
           <strong>Instagram: </strong>
           <a
-            href="https://www.instagram.com/ca_imoveisbr/"
+            href="https://www.instagram.com/imobiliariacaimoveis/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-green-800 underline hover:text-green-600"

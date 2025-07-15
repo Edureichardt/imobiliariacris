@@ -139,7 +139,7 @@ export default function DetalheImovelCliente({ imovel }: { imovel: Imovel }) {
   const whatsappShareLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(
     mensagemCompartilhar + '\n' + linkImovel
   )}`;
-  const instagramPerfil = 'https://www.instagram.com/ca_imoveisbr/';
+  const instagramPerfil = 'https://www.instagram.com/imobiliariacaimoveis/';
   const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(linkImovel)}`;
 
   const abrirModal = (url: string) => {

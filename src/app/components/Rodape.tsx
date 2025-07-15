@@ -23,7 +23,7 @@ const Rodape = () => {
             <h3 className="font-semibold text-lg mb-2 text-center">Mídias Sociais</h3>
             <div className="flex justify-center space-x-6 mt-2">
               <a
-                href="https://www.instagram.com/ca_imoveisbr/"
+                href="https://www.instagram.com/imobiliariacaimoveis/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
