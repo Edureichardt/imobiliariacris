@@ -11,7 +11,7 @@ export default function Header() {
           <Link href="/">
             <Image
               src="/logo1.png"
-              alt="Logotipo da CA Imóveis"
+              alt="CA Imóveis"
               width={80}
               height={50}
               priority
