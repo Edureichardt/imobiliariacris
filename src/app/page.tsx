@@ -8,6 +8,10 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import Loading from './components/Loading';
+import BannerRotativo from './components/BannerRotativo';
+import InstagramSection from './components/InstagramSection';
+
+
 
 type Filtros = {
   tipo: string;
@@ -102,41 +106,7 @@ const Pesquisa: React.FC<{
   );
 };
 
-const BannerRotativo: React.FC = () => {
-  const imagens = ['/banner1.jpg', '/banner2.jpg', '/banner3.jpg'];
 
-  return (
-    <div className="relative w-full h-[400px] md:h-[500px] mb-12">
-      <Swiper
-        modules={[Autoplay, Pagination]}
-        slidesPerView={1}
-        autoplay={{ delay: 4000 }}
-        loop
-        pagination={{ clickable: true }}
-        className="w-full h-full"
-      >
-        {imagens.map((src, i) => (
-          <SwiperSlide key={i}>
-            <div className="relative w-full h-full">
-              <Image
-                src={src}
-                alt={`Banner ${i + 1}`}
-                fill
-                style={{ objectFit: 'cover' }}
-                priority={i === 0}
-              />
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <h2 className="text-white text-4xl md:text-5xl font-serif text-center px-4">
-                  A melhor escolha no lugar certo é aqui
-                </h2>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
-  );
-};
 
 const ITEMS_PER_PAGE = 4;
 
@@ -315,6 +285,7 @@ const HomePage: React.FC = () => {
 
   const imoveisVenda = imoveis.filter((i) => i.operacao === 'comprar' && i.ativo !== false);
   const imoveisAluguel = imoveis.filter((i) => i.operacao === 'alugar' && i.ativo !== false);
+  
 
   return (
     <>
@@ -328,6 +299,7 @@ const HomePage: React.FC = () => {
           <Destaques />
           <NavegacaoImoveis titulo="Imóveis à Venda" imoveis={imoveisVenda} />
           <NavegacaoImoveis titulo="Imóveis para Alugar" imoveis={imoveisAluguel} />
+          <InstagramSection />
         </>
       )}
     </>
