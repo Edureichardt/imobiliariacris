@@ -100,7 +100,7 @@ export default function Header() {
                 ca imóveis
               </span>
               <span className="mt-1 text-green-300 text-xs font-light italic max-w-[140px] text-center">
-                a melhor escolha no lugar certo é aqui
+                Excelência em Negócios Imobiliários
               </span>
             </div>
           </Link>
