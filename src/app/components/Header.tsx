@@ -31,7 +31,7 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [centralOpen, setCentralOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [menuMobileOpen, setMenuMobileOpen] = useState(false); // para menu hamburger mobile
+  const [menuMobileOpen, setMenuMobileOpen] = useState(false);
 
   const [tipo, setTipo] = useState('');
   const [cidade, setCidade] = useState('');
@@ -86,7 +86,7 @@ export default function Header() {
         <div className="max-w-7xl mx-auto flex items-center px-4 relative h-24 space-x-6">
 
           {/* LOGO */}
-          <Link href="/" className="z-50 flex-shrink-0">
+          <Link href="/" className="z-30 flex-shrink-0">
             <div className="bg-black bg-opacity-70 border border-green-400 rounded-lg p-4 flex flex-col items-center shadow-lg">
               <Image
                 src="/logo1.png"
@@ -202,7 +202,7 @@ export default function Header() {
 
         {/* MENU MOBILE dropdown */}
         {menuMobileOpen && (
-          <nav className="md:hidden bg-black bg-opacity-90 border-t border-green-400 p-4 space-y-3 text-white text-center z-40 fixed top-24 left-0 right-0 shadow-lg">
+          <nav className="md:hidden bg-black bg-opacity-90 border-t border-green-400 p-4 space-y-3 text-white text-center z-50 fixed top-24 left-0 right-0 shadow-lg">
             <Link href="/" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
               Início
             </Link>
