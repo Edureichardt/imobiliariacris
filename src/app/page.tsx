@@ -166,7 +166,7 @@ const NavegacaoImoveis: React.FC<{
                     alt={`Imagem do imóvel ${tipo} em ${bairro}`}
                     width={500}
                     height={300}
-                    className="w-full h-60 object-cover bg-center  cursor-pointer "
+                    className="min-w-full h-60 object-cover bg-center  cursor-pointer "
                   />
                 </Link>
                 <div className="p-4">
