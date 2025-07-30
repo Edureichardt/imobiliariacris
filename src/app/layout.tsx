@@ -16,7 +16,6 @@ const geistMono = Roboto_Mono({
 })
 
 export const metadata: Metadata = {
-
   title: 'Imobiliaria CA Imóveis | Imobiliária em Mafra e Rio Negro',
   description:
     'Imobiliária em Mafra e Rio Negro. Casas, apartamentos, terrenos e imóveis comerciais à venda e para alugar com a CA Imóveis.',
@@ -37,6 +36,7 @@ export default function RootLayout({
           name="google-site-verification"
           content="LRBP7xDyhJN7nIQ5s0JWo3R1rmDJW5u2A3An8KASHII"
         />
+        <link rel="icon" href="/favicon.ico" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -61,7 +61,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Preloader />
         <Header />
-        <main className="pt-24">{children}</main> {/* Adicionado padding top para não esconder atrás do header */}
+        <main className="pt-24">{children}</main>
         <Rodape />
       </body>
     </html>
