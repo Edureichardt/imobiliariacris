@@ -1,27 +1,41 @@
-// src/app/sitemap.xml/route.ts
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   const baseUrl = 'https://caimoveis.dev.br';
 
-  // Busca todos os imóveis via sua API
+  // Busca os imóveis da API
   const imoveis = await fetch(`${baseUrl}/api/imoveis`)
     .then(res => res.json());
 
-  // URLs estáticas (incluindo Rio Negro e Mafra)
-  const staticUrls = [
-    `${baseUrl}/`,
-    `${baseUrl}/sobre`,
-    `${baseUrl}/imoveis`,
-    `${baseUrl}/imobiliaria-em-rio-negro`,
-    `${baseUrl}/imobiliaria-em-mafra`
-  ].map(url => `<url><loc>${url}</loc><priority>${url === baseUrl + '/' ? '1.0' : '0.8'}</priority></url>`)
-   .join('');
+  const today = new Date().toISOString();
 
-  // URLs dinâmicas dos imóveis
-  const urlsImoveis = imoveis.map((i: any) =>
-    `<url><loc>${baseUrl}/imovel/${i.id}</loc><priority>0.8</priority></url>`
-  ).join('');
+  // URLs estáticas
+  const staticUrls = [
+    '/',
+    '/sobre',
+    '/imoveis',
+    '/imobiliaria-em-rio-negro',
+    '/imobiliaria-em-mafra'
+  ]
+    .map(path => `
+    <url>
+      <loc>${baseUrl}${path}</loc>
+      <priority>${path === '/' ? '1.0' : '0.8'}</priority>
+      <lastmod>${today}</lastmod>
+      <changefreq>weekly</changefreq>
+    </url>
+  `)
+    .join('');
+
+  // URLs dinâmicas de imóveis
+  const urlsImoveis = imoveis.map((i: any) => `
+    <url>
+      <loc>${baseUrl}/imovel/${i.slug}</loc>
+      <priority>0.8</priority>
+      <lastmod>${i.updatedAt || today}</lastmod>
+      <changefreq>weekly</changefreq>
+    </url>
+  `).join('');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -29,7 +43,10 @@ ${staticUrls}
 ${urlsImoveis}
 </urlset>`;
 
-  return new NextResponse(xml, {
-    headers: { 'Content-Type': 'application/xml' }
+  return new NextResponse(xml.trim(), {
+    headers: {
+      'Content-Type': 'application/xml',
+      'Cache-Control': 's-maxage=3600, stale-while-revalidate'
+    }
   });
 }

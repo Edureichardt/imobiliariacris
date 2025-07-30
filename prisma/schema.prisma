@@ -17,9 +17,10 @@ model Imovel {
   endereco   String
   preco      Float
   criadoEm   DateTime @default(now())
-  ativo      Boolean  @default(true)   // já tinha
-  destaque   Boolean  @default(false)  // para destacar imóvel na home
-  tourUrl    String?                   // <-- campo opcional para vídeo (pode ser null)
+  ativo      Boolean  @default(true)
+  destaque   Boolean  @default(false)
+  tourUrl    String?
+  slug       String?  @unique           // ← AGORA OPCIONAL
   fotos      Foto[]
 }
 
