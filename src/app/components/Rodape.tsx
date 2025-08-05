@@ -82,8 +82,8 @@ const Rodape = () => {
           {/* Onde Estamos */}
           <div className="flex flex-col">
             <SimpleUnderlineTitle>Onde Estamos</SimpleUnderlineTitle>
-            <p>Rua R. Felipe Schmidt, 945 - Centro</p>
-            <p>Mafra - SC, 89300-074</p>
+            <p>Av. Pref. Frederico Heyse, 1122 - Centro II</p>
+            <p>Mafra - SC, 89300-070</p>
           </div>
 
           {/* Entre em Contato */}

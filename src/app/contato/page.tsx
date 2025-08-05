@@ -42,7 +42,9 @@ export default function Contato() {
       <div className="mb-10 rounded-xl overflow-hidden shadow-lg">
         <iframe
           title="Localização"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3582.366021704749!2d-49.808127725410834!3d-26.1196061771288!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dd93228feb3121%3A0x49d43f0ddbae5d76!2sR.%20Felipe%20Schmidt%2C%20945%20-%20centro%2C%20Mafra%20-%20SC%2C%2089300-074!5e0!3m2!1spt-BR!2sbr!4v1748112282939!5m2!1spt-BR!2sbr"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d698.5077036330553!2d-49.80741733047709!3d-26.120781394435138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94dd932243368299%3A0x88f0b37c1560036b!2sAv.%20Pref.%20Frederico%20Heyse%2C%201122%20-%20sala%2001%20-%20Centro%20II%20Alto%20de%20Mafra%2C%20Mafra%20-%20SC%2C%2089300-070!5e1!3m2!1spt-BR!2sbr!4v1754406443203!5m2!1spt-BR!2sbr"
+
+
           width="100%"
           height="300"
           style={{ border: 0 }}
