@@ -22,6 +22,7 @@ model Imovel {
   tourUrl    String?
   slug       String?  @unique           // ← AGORA OPCIONAL
   fotos      Foto[]
+   capa      String? //
 }
 
 model Foto {
