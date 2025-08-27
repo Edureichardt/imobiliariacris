@@ -11,8 +11,6 @@ import Loading from './components/Loading';
 import BannerRotativo from './components/BannerRotativo';
 import InstagramSection from './components/InstagramSection';
 
-
-
 type Filtros = {
   tipo: string;
   cidade: string;
@@ -26,6 +24,7 @@ type Imovel = {
   endereco: string;
   preco: number | string;
   fotos?: string[];
+  capa?: string; // agora incluímos capa
   cidade?: string;
   bairro?: string;
   operacao?: string;
@@ -106,9 +105,14 @@ const Pesquisa: React.FC<{
   );
 };
 
-
-
 const ITEMS_PER_PAGE = 4;
+
+// função atualizada para considerar capa
+const getFotoUrl = (imovel: Imovel) => {
+  if (imovel.capa) return imovel.capa;
+  if (Array.isArray(imovel.fotos) && imovel.fotos.length > 0) return imovel.fotos[0];
+  return 'https://picsum.photos/600/400';
+};
 
 const Paginacao: React.FC<{
   totalItems: number;
@@ -136,10 +140,6 @@ const Paginacao: React.FC<{
   );
 };
 
-const getFotoUrl = (fotos?: string[]) => {
-  return Array.isArray(fotos) && fotos.length > 0 ? fotos[0] : null;
-};
-
 const NavegacaoImoveis: React.FC<{
   titulo: string;
   imoveis: Imovel[];
@@ -155,25 +155,25 @@ const NavegacaoImoveis: React.FC<{
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {dadosPagina.map(({ id, tipo, endereco, preco, fotos, bairro }) => (
+            {dadosPagina.map((imovel) => (
               <div
-                key={id}
+                key={imovel.id}
                 className="border rounded-lg overflow-hidden shadow-md hover:scale-[1.02] transition"
               >
-                <Link href={`/imovel/${id}`}>
+                <Link href={`/imovel/${imovel.id}`}>
                   <Image
-                    src={getFotoUrl(fotos) || 'https://picsum.photos/600/400'}
-                    alt={`Imagem do imóvel ${tipo} em ${bairro}`}
+                    src={getFotoUrl(imovel)}
+                    alt={`Imagem do imóvel ${imovel.tipo} em ${imovel.bairro}`}
                     width={500}
                     height={300}
-                    className="min-w-full h-60 object-cover bg-center  cursor-pointer "
+                    className="min-w-full h-60 object-cover bg-center cursor-pointer"
                   />
                 </Link>
                 <div className="p-4">
-                  <h3 className="font-bold text-lg mb-1 capitalize">{tipo}</h3>
-                  <p className="text-gray-600 mb-1">{endereco}</p>
+                  <h3 className="font-bold text-lg mb-1 capitalize">{imovel.tipo}</h3>
+                  <p className="text-gray-600 mb-1">{imovel.endereco}</p>
                   <p className="text-green-700 font-bold">
-                    R$ {Number(preco).toLocaleString('pt-BR')}
+                    R$ {Number(imovel.preco).toLocaleString('pt-BR')}
                   </p>
                 </div>
               </div>
@@ -221,7 +221,7 @@ const Destaques: React.FC = () => {
           >
             <Link href={`/imovel/${imovel.id}`}>
               <img
-                src={getFotoUrl(imovel.fotos) || 'https://picsum.photos/600/400'}
+                src={getFotoUrl(imovel)}
                 alt={`Foto do imóvel em ${imovel.bairro ?? 'localização'}`}
                 className="h-60 w-full object-cover mb-2 rounded cursor-pointer"
               />
@@ -285,7 +285,6 @@ const HomePage: React.FC = () => {
 
   const imoveisVenda = imoveis.filter((i) => i.operacao === 'comprar' && i.ativo !== false);
   const imoveisAluguel = imoveis.filter((i) => i.operacao === 'alugar' && i.ativo !== false);
-  
 
   return (
     <>

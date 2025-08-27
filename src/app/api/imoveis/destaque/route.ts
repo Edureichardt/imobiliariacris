@@ -41,6 +41,7 @@ export async function GET() {
         destaque: imovel.destaque,
         tourUrl: imovel.tourUrl || null,
         fotos: fotosValidas,
+        capa: imovel.capa ?? fotosValidas[0] ?? null,
       };
     });
 

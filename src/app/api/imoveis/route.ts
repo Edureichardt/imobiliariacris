@@ -29,6 +29,7 @@ export async function GET(req: Request) {
             .filter(foto => foto.url && foto.url.trim() !== '')
             .map(foto => foto.url)
         : [],
+      capa: imovel.capa ?? (Array.isArray(imovel.fotos) && imovel.fotos[0]?.url) ?? null,
     }));
 
     console.log(`Encontrados ${imoveisFiltrados.length} imóveis`);
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
         preco: precoNumerico,
         destaque: body.destaque ?? false,
         tourUrl: body.tourUrl ?? null,
+        capa: body.capa ?? (Array.isArray(body.fotos) ? body.fotos[0] : null),
         fotos: {
           create: Array.isArray(body.fotos)
             ? body.fotos.map((url: string) => ({ url }))
