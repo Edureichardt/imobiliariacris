@@ -1,49 +1,52 @@
 "use client";
 
-import { useState, useRef } from 'react';
-import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import { useState, useRef } from "react";
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 
 export default function CadastroImovel() {
   const [form, setForm] = useState({
-    operacao: '',
-    descricao: '',
-    tipo: '',
-    cidade: '',
-    bairro: '',
-    endereco: '',
-    preco: '',
+    operacao: "",
+    descricao: "",
+    tipo: "",
+    cidade: "",
+    bairro: "",
+    endereco: "",
+    preco: "",
     fotos: [] as string[],
     destaque: false,
-    tourUrl: '',
+    tourUrl: "",
+    capa: "" // <- nova propriedade
   });
 
   const [uploadingFoto, setUploadingFoto] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const descricaoRef = useRef<HTMLTextAreaElement>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const target = e.target;
     const { name, value, type } = target;
 
-    if (type === 'checkbox' && 'checked' in target) {
-      setForm(prev => ({ ...prev, [name]: (target as HTMLInputElement).checked }));
-    } else if (name === 'preco') {
-      const raw = value.replace(/[^\d]/g, '');
+    if (type === "checkbox" && "checked" in target) {
+      setForm((prev) => ({ ...prev, [name]: (target as HTMLInputElement).checked }));
+    } else if (name === "preco") {
+      const raw = value.replace(/[^\d]/g, "");
       const num = parseFloat(raw) / 100;
       const formatado = isNaN(num)
-        ? ''
-        : num.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
+        ? ""
+        : num.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
           });
-      setForm(prev => ({ ...prev, [name]: formatado }));
+      setForm((prev) => ({ ...prev, [name]: formatado }));
     } else {
-      setForm(prev => ({ ...prev, [name]: value }));
+      setForm((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -57,7 +60,7 @@ export default function CadastroImovel() {
     const text = form.descricao;
 
     const newText = text.slice(0, start) + emoji + text.slice(end);
-    setForm(prev => ({ ...prev, descricao: newText }));
+    setForm((prev) => ({ ...prev, descricao: newText }));
 
     setTimeout(() => {
       textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
@@ -71,32 +74,32 @@ export default function CadastroImovel() {
     if (files.length === 0) return;
 
     setUploadingFoto(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const uploaded = await Promise.all(
         files.map(async (file) => {
           const formData = new FormData();
-          formData.append('image', file);
+          formData.append("image", file);
 
-          const res = await fetch('/api/upload', {
-            method: 'POST',
+          const res = await fetch("/api/upload", {
+            method: "POST",
             body: formData,
           });
 
           const data = await res.json();
 
-          if (!res.ok) throw new Error(data.error || 'Falha no upload');
-          if (!data.url) throw new Error('URL da imagem não retornada');
+          if (!res.ok) throw new Error(data.error || "Falha no upload");
+          if (!data.url) throw new Error("URL da imagem não retornada");
 
           return data.url as string;
         })
       );
 
-      setForm(prev => ({ ...prev, fotos: [...prev.fotos, ...uploaded] }));
-      setMessage('Fotos enviadas com sucesso!');
+      setForm((prev) => ({ ...prev, fotos: [...prev.fotos, ...uploaded] }));
+      setMessage("Fotos enviadas com sucesso!");
     } catch (error) {
-      setMessage((error as Error).message || 'Erro ao enviar imagens.');
+      setMessage((error as Error).message || "Erro ao enviar imagens.");
     } finally {
       setUploadingFoto(false);
     }
@@ -108,25 +111,25 @@ export default function CadastroImovel() {
     if (!file) return;
 
     setUploadingVideo(true);
-    setMessage('');
+    setMessage("");
 
     try {
       const formData = new FormData();
-      formData.append('video', file);
+      formData.append("video", file);
 
-      const res = await fetch('/api/upload-video', {
-        method: 'POST',
+      const res = await fetch("/api/upload-video", {
+        method: "POST",
         body: formData,
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Falha no upload do vídeo');
-      if (!data.url) throw new Error('URL do vídeo não retornada');
+      if (!res.ok) throw new Error(data.error || "Falha no upload do vídeo");
+      if (!data.url) throw new Error("URL do vídeo não retornada");
 
-      setForm(prev => ({ ...prev, tourUrl: data.url }));
-      setMessage('Vídeo enviado com sucesso!');
+      setForm((prev) => ({ ...prev, tourUrl: data.url }));
+      setMessage("Vídeo enviado com sucesso!");
     } catch (error) {
-      setMessage((error as Error).message || 'Erro ao enviar vídeo.');
+      setMessage((error as Error).message || "Erro ao enviar vídeo.");
     } finally {
       setUploadingVideo(false);
     }
@@ -134,40 +137,46 @@ export default function CadastroImovel() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage('');
+    setMessage("");
 
     if (form.fotos.length === 0) {
-      setMessage('Por favor, envie ao menos uma foto.');
+      setMessage("Por favor, envie ao menos uma foto.");
+      return;
+    }
+
+    if (!form.capa) {
+      setMessage("Por favor, selecione uma foto de capa.");
       return;
     }
 
     try {
-      const res = await fetch('/api/imoveis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/imoveis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
 
       if (res.ok) {
-        setMessage('Imóvel cadastrado com sucesso!');
+        setMessage("Imóvel cadastrado com sucesso!");
         setForm({
-          operacao: '',
-          descricao: '',
-          tipo: '',
-          cidade: '',
-          bairro: '',
-          endereco: '',
-          preco: '',
+          operacao: "",
+          descricao: "",
+          tipo: "",
+          cidade: "",
+          bairro: "",
+          endereco: "",
+          preco: "",
           fotos: [],
           destaque: false,
-          tourUrl: '',
+          tourUrl: "",
+          capa: "",
         });
       } else {
-        setMessage('Erro ao cadastrar imóvel.');
+        setMessage("Erro ao cadastrar imóvel.");
       }
     } catch (error) {
-      setMessage('Erro ao cadastrar imóvel.');
-      console.error('Erro no fetch:', error);
+      setMessage("Erro ao cadastrar imóvel.");
+      console.error("Erro no fetch:", error);
     }
   };
 
@@ -204,7 +213,7 @@ export default function CadastroImovel() {
             />
             <button
               type="button"
-              onClick={() => setEmojiPickerOpen(open => !open)}
+              onClick={() => setEmojiPickerOpen((open) => !open)}
               className="absolute right-2 bottom-2 text-xl"
               aria-label="Adicionar emoji"
             >
@@ -212,10 +221,7 @@ export default function CadastroImovel() {
             </button>
             {emojiPickerOpen && (
               <div className="absolute z-50 top-full right-0 mt-1 shadow-lg rounded bg-white">
-                <EmojiPicker
-                  onEmojiClick={onEmojiClick}
-                  height={300}
-                />
+                <EmojiPicker onEmojiClick={onEmojiClick} height={300} />
               </div>
             )}
           </div>
@@ -299,12 +305,29 @@ export default function CadastroImovel() {
               <p className="font-semibold mb-2">Fotos enviadas:</p>
               <div className="flex flex-wrap gap-2">
                 {form.fotos.map((url, i) => (
-                  <img
-                    key={i}
-                    src={url}
-                    alt={`Foto ${i + 1}`}
-                    className="w-24 h-24 object-cover rounded"
-                  />
+                  <div key={i} className="relative">
+                    <img
+                      src={url}
+                      alt={`Foto ${i + 1}`}
+                      className={`w-24 h-24 object-cover rounded border-4 ${
+                        form.capa === url
+                          ? "border-blue-600"
+                          : "border-transparent"
+                      }`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setForm((prev) => ({
+                          ...prev,
+                          capa: url,
+                        }))
+                      }
+                      className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded"
+                    >
+                      {form.capa === url ? "Capa" : "Definir capa"}
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
