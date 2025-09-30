@@ -137,7 +137,7 @@ const Rodape = () => {
             rel="noopener noreferrer"
             className="underline hover:text-green-400"
           >
-            EduReichardt
+            ReichardtDev's
           </a>
         </div>
 
