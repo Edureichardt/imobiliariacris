@@ -132,7 +132,7 @@ const Rodape = () => {
         <div className="max-w-7xl mx-auto px-4 mt-10 text-center text-green-300 text-sm font-semibold">
           Desenvolvido por{' '}
           <a
-            href="https://www.instagram.com/reichardt.dev/"
+            href="https://www.instagram.com/reichardtdevs/"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-green-400"
