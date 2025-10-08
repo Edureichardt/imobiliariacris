@@ -3,12 +3,12 @@
 import { SessionProvider } from "next-auth/react";
 import Sidebar from "../components/Sidebar";
 
-interface AdminLayoutProps {
+interface AdminLayoutClientProps {
   children: React.ReactNode;
-  session: any; // session obrigatória, passada pelo server layout
+  session: any; // session passada do layout server-side
 }
 
-export default function AdminLayout({ children, session }: AdminLayoutProps) {
+export default function AdminLayoutClient({ children, session }: AdminLayoutClientProps) {
   return (
     <SessionProvider session={session}>
       <div className="flex min-h-screen">
