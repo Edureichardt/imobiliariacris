@@ -2,7 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-const handler = NextAuth({
+// Definindo authOptions separadamente para exportar
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -64,6 +65,10 @@ const handler = NextAuth({
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
 
+// Cria o handler do NextAuth usando authOptions
+const handler = NextAuth(authOptions);
+
+// Exporta para rotas GET e POST
 export { handler as GET, handler as POST };
