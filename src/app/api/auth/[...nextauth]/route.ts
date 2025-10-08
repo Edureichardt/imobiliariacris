@@ -16,22 +16,28 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         console.log("Credenciais recebidas:", credentials);
-        console.log("ADMIN_USER:", ADMIN_USER);
-        console.log("ADMIN_HASH:", ADMIN_HASH);
 
+        // Verifica se usuário e senha foram preenchidos
         if (!credentials?.usuario || !credentials?.senha) {
           console.log("⚠️ Faltando usuário ou senha");
           return null;
         }
 
-        // Cria uma variável de hash tipada como string
-        const hash: string = ADMIN_HASH || process.env.ADMIN_PW_HASH!;
-        if (!hash) throw new Error("ADMIN_PW_HASH não definido");
+        // Pega o hash do admin (do arquivo de config ou do .env)
+        const hashFromConfig = ADMIN_HASH;
+        const hashFromEnv = process.env.ADMIN_PW_HASH;
+        const hash: string | null = hashFromConfig ?? hashFromEnv ?? null;
 
-        // Usa a variável 'hash' no compare
+        if (!hash) {
+          console.error("🚨 Nenhum hash de senha definido (ADMIN_HASH ou ADMIN_PW_HASH)");
+          return null; // evita crash
+        }
+
+        // Valida a senha
         const senhaValida = await bcrypt.compare(credentials.senha, hash);
         console.log("Senha válida?", senhaValida);
 
+        // Retorna o usuário se as credenciais estiverem corretas
         if (credentials.usuario === ADMIN_USER && senhaValida) {
           console.log("✅ Login autorizado!");
           return { id: "1", name: "Administrador" };
