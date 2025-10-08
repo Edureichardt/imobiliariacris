@@ -21,7 +21,10 @@ export const authOptions = {
 
         // Validar variáveis de ambiente
         if (!ADMIN_USER || !ADMIN_PW_HASH) {
-          console.error("Erro: Variáveis de ambiente ADMIN_USER ou ADMIN_PW_HASH ausentes");
+          console.error("Erro: Variáveis de ambiente ausentes", {
+            ADMIN_USER: !!ADMIN_USER,
+            ADMIN_PW_HASH: !!ADMIN_PW_HASH,
+          });
           throw new Error("Erro de configuração do servidor");
         }
 
@@ -36,7 +39,7 @@ export const authOptions = {
           throw new Error("Credenciais inválidas");
         }
 
-        // Retornar objeto de usuário para o NextAuth
+        // Retornar objeto de usuário
         return {
           id: "1",
           name: credentials.usuario,
@@ -47,19 +50,17 @@ export const authOptions = {
     }),
   ],
   pages: {
-    signIn: "/auth/signin", // Página de login customizada (crie se necessário)
-    error: "/auth/error", // Página de erro customizada (opcional)
+    signIn: "/auth/signin", // Página de login customizada
+    error: "/auth/error", // Página de erro customizada
   },
   callbacks: {
     async jwt({ token, user }) {
-      // Adicionar role ao token JWT
       if (user) {
         token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
-      // Adicionar role à sessão
       if (token) {
         session.user.id = token.sub;
         session.user.role = token.role;
@@ -73,6 +74,6 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
+// Exportar o handler do NextAuth para GET e POST
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };
