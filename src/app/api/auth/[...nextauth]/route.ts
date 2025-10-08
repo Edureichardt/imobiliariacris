@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { NextAuthOptions, User, Session } from "@auth/core/types"; // Importar de @auth/core/types
+import { NextAuthOptions, User, Session } from "@auth/core/types";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -46,7 +46,7 @@ const authOptions: NextAuthOptions = {
           id: "1",
           name: credentials.usuario,
           email: `${credentials.usuario}@admin.com`,
-          role: "admin", // Propriedade role incluída
+          role: "admin",
         };
       },
     }),
