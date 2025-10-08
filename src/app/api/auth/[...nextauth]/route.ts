@@ -17,16 +17,14 @@ const handler = NextAuth({
           return null;
         }
 
-        // Escolhe o hash disponível
-        const hash = ADMIN_HASH ?? process.env.ADMIN_PW_HASH;
-
-        // Se hash for undefined, retorna null (evita crash)
-        if (typeof hash !== "string") {
+        // Garantindo que hash seja uma string
+        const hash: string = ADMIN_HASH ?? process.env.ADMIN_PW_HASH ?? "";
+        if (!hash) {
           console.error("🚨 ADMIN_HASH ou ADMIN_PW_HASH não definidos");
           return null;
         }
 
-        // Agora TypeScript sabe que hash é string
+        // bcrypt.compare agora recebe somente string
         const senhaValida = await bcrypt.compare(credentials.senha, hash);
 
         if (credentials.usuario === ADMIN_USER && senhaValida) {
