@@ -24,15 +24,14 @@ const handler = NextAuth({
           return null;
         }
 
-        // Garante que o hash nunca será undefined
+        // Cria uma variável de hash tipada como string
         const hash: string = ADMIN_HASH || process.env.ADMIN_PW_HASH!;
         if (!hash) throw new Error("ADMIN_PW_HASH não definido");
 
-        // Valida a senha
+        // Usa a variável 'hash' no compare
         const senhaValida = await bcrypt.compare(credentials.senha, hash);
         console.log("Senha válida?", senhaValida);
 
-        // Retorna o usuário se as credenciais estiverem corretas
         if (credentials.usuario === ADMIN_USER && senhaValida) {
           console.log("✅ Login autorizado!");
           return { id: "1", name: "Administrador" };
