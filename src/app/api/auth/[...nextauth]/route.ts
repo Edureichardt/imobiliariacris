@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthOptions, User, Session } from "next-auth";
+import NextAuth from "next-auth";
+import { NextAuthOptions, User, Session } from "@auth/core/types"; // Importar de @auth/core/types
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -57,14 +58,14 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        token.role = user.role; // Agora role é reconhecido
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user.id = token.sub;
-        session.user.role = token.role; // Agora role é reconhecido
+        session.user.role = token.role;
       }
       return session;
     },
