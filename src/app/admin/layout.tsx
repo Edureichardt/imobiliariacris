@@ -1,14 +1,9 @@
-import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
-
 import AdminLayoutClient from './AdminLayoutClient';
-import { authOptions } from "../../lib/auth";
-
-
-
+import { getServerSession } from "@/lib/auth"; // usa a função da lib
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession();
 
   // Redireciona se não estiver logado ou não for admin
   if (!session || session.user?.role !== "admin") {
