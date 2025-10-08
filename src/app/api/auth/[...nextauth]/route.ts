@@ -24,12 +24,12 @@ const handler = NextAuth({
           return null;
         }
 
-        // Garante que o hash não seja undefined
-        const hash = ADMIN_HASH || process.env.ADMIN_PW_HASH;
+        // Garante que o hash nunca será undefined
+        const hash: string = ADMIN_HASH || process.env.ADMIN_PW_HASH!;
         if (!hash) throw new Error("ADMIN_PW_HASH não definido");
 
-        // Valida a senha (o `!` garante para o TypeScript que hash nunca é undefined)
-        const senhaValida = await bcrypt.compare(credentials.senha, hash!);
+        // Valida a senha
+        const senhaValida = await bcrypt.compare(credentials.senha, hash);
         console.log("Senha válida?", senhaValida);
 
         // Retorna o usuário se as credenciais estiverem corretas
