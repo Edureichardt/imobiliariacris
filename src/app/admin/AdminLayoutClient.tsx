@@ -9,6 +9,11 @@ interface AdminLayoutClientProps {
 }
 
 export default function AdminLayoutClient({ children, session }: AdminLayoutClientProps) {
+  // Bloqueia renderização se session não existir ou usuário não for admin
+  if (!session || session.user?.role !== "admin") {
+    return null; // ou você pode colocar um <Loading /> ou mensagem
+  }
+
   return (
     <SessionProvider session={session}>
       <div className="flex min-h-screen">
