@@ -4,8 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { ADMIN_USER, ADMIN_HASH } from "../../../config/admin-config.mjs";
 
-
- // ajuste o caminho conforme necessário
+// ajuste o caminho conforme necessário
 
 const handler = NextAuth({
   providers: [
@@ -25,11 +24,12 @@ const handler = NextAuth({
           return null;
         }
 
+        // Garante que o hash não seja undefined
         const hash = ADMIN_HASH || process.env.ADMIN_PW_HASH;
-if (!hash) throw new Error("ADMIN_PW_HASH não definido");
+        if (!hash) throw new Error("ADMIN_PW_HASH não definido");
 
-const senhaValida = await bcrypt.compare(credentials.senha, hash);
-
+        // Valida a senha
+        const senhaValida = await bcrypt.compare(credentials.senha, hash);
         console.log("Senha válida?", senhaValida);
 
         if (credentials.usuario === ADMIN_USER && senhaValida) {
