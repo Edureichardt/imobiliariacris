@@ -1,7 +1,8 @@
-'use client'
-import React, { useState } from 'react';
+'use client';
+
+import React from 'react';
 import { FaInstagram, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
-import LoginModal from './LoginModal';
+import { useRouter } from 'next/navigation';
 
 const Triangle = () => (
   <svg
@@ -22,12 +23,11 @@ const SimpleUnderlineTitle: React.FC<{ children: React.ReactNode }> = ({ childre
 );
 
 const Rodape = () => {
-  const [showLogin, setShowLogin] = useState(false);
+  const router = useRouter();
 
   return (
     <>
-      <footer className="bg-gradient-to-bl from-green-950 to-black text-white py-12
-">
+      <footer className="bg-gradient-to-bl from-green-950 to-black text-white py-12">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-5 gap-12">
           {/* Nossa Marca */}
           <div className="flex flex-col items-start space-y-2">
@@ -145,8 +145,9 @@ const Rodape = () => {
         <div className="max-w-7xl mx-auto px-4 mt-6 text-sm text-green-300 flex justify-between items-center">
           <p className="flex items-center gap-2">🔑 CRECI - SC 10719J</p>
 
+          {/* Botão administrativo seguro */}
           <button
-            onClick={() => setShowLogin(true)}
+            onClick={() => router.push("/login")}
             aria-label="Área Administrativa"
             className="text-green-300 hover:text-green-100 text-2xl"
             title="Área Administrativa"
@@ -155,8 +156,6 @@ const Rodape = () => {
           </button>
         </div>
       </footer>
-
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </>
   );
 };
