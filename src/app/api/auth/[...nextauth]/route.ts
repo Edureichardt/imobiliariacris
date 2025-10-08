@@ -1,9 +1,8 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions, User, Session, JWT } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-// Defina authOptions sem exportar diretamente na rota
-const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -55,13 +54,13 @@ const authOptions = {
     error: "/auth/error", // Página de erro customizada
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.role = user.role;
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user.id = token.sub;
         session.user.role = token.role;
@@ -75,6 +74,6 @@ const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Exportar apenas o handler do NextAuth
+// Exportar o handler do NextAuth
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
