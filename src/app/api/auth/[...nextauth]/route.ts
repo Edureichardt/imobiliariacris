@@ -2,7 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-export const authOptions = {
+// Defina authOptions sem exportar diretamente na rota
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -74,6 +75,6 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Exportar o handler do NextAuth
+// Exportar apenas o handler do NextAuth
 const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
