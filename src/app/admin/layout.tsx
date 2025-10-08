@@ -2,7 +2,8 @@ import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
 import AdminLayoutClient from './AdminLayoutClient';
-import { authOptions } from "../../lib/auth";
+import { authOptions } from "@/lib/auth";
+
 
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
