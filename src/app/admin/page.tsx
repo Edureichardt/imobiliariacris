@@ -27,7 +27,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-2xl">
         <h1 className="text-3xl font-bold text-green-900 mb-4 text-center">
-          Painel Administrativo Caimoveis
+          Painel Administrativo 
         </h1>
 
         <p className="text-gray-700 mb-6 text-center">
