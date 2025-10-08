@@ -1,19 +1,16 @@
-'use client';
-import { SessionProvider } from "next-auth/react";
-import Sidebar from '../components/Sidebar';
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
+import AdminLayoutClient from "./AdminLayout"; // seu layout client atualizado
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-  session?: any; // opcional, caso queira passar session como prop
-}
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession(authOptions);
 
-export default function AdminLayout({ children, session }: AdminLayoutProps) {
-  return (
-    <SessionProvider session={session}>
-      <div className="flex min-h-screen">
-        <Sidebar />
-        <main className="flex-1 p-6 bg-gray-100">{children}</main>
-      </div>
-    </SessionProvider>
-  );
+  // Redireciona se não estiver logado ou não for admin
+  if (!session || session.user?.role !== "admin") {
+    redirect("/login");
+  }
+
+  // Renderiza o layout client passando a session
+  return <AdminLayoutClient session={session}>{children}</AdminLayoutClient>;
 }
