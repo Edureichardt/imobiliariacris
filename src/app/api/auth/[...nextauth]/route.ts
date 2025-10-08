@@ -1,57 +1,34 @@
-import 'dotenv/config'; // garante que o .env.local seja carregado
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import { ADMIN_USER, ADMIN_HASH } from "../../../config/admin-config.mjs";
+import { NextResponse } from 'next/server';
+import bcrypt from 'bcrypt';
 
-/**
- * Endpoint de autenticação para NextAuth usando credenciais de administrador.
- * - Valida usuário e senha via bcrypt.
- * - Garante tipos corretos para TypeScript.
- */
+export async function POST(request: Request) {
+  try {
+    const { senha } = await request.json(); // Supondo que senha venha do corpo da requisição
 
-const handler = NextAuth({
-  providers: [
-    CredentialsProvider({
-      name: "Credenciais",
-      credentials: {
-        usuario: { label: "Usuário", type: "text" },
-        senha: { label: "Senha", type: "password" },
-      },
-      async authorize(credentials) {
-        // Verifica se credenciais foram fornecidas
-        if (!credentials?.usuario || !credentials?.senha) {
-          console.warn("⚠️ Usuário ou senha não fornecidos");
-          return null;
-        }
+    // Verifica se senha foi fornecida e é uma string
+    if (!senha || typeof senha !== 'string') {
+      return NextResponse.json(
+        { ok: false, message: 'Senha é obrigatória' },
+        { status: 400 }
+      );
+    }
 
-        // Garante que hash sempre seja string
-        const hash: string = ADMIN_HASH ?? process.env.ADMIN_PW_HASH ?? "";
-        if (!hash) {
-          console.error("❌ ADMIN_HASH ou ADMIN_PW_HASH não definido");
-          return null;
-        }
+    // Compara a senha fornecida com a senha hasheada
+    const match = await bcrypt.compare(senha, process.env.ADMIN_PW_HASH!);
 
-        // Valida a senha
-        const senhaValida = await bcrypt.compare(credentials.senha, hash);
+    if (!match) {
+      return NextResponse.json(
+        { ok: false, message: 'Credenciais inválidas' },
+        { status: 401 }
+      );
+    }
 
-        if (credentials.usuario === ADMIN_USER && senhaValida) {
-          console.log("✅ Login autorizado para administrador");
-          return { id: "1", name: "Administrador" };
-        }
-
-        console.warn("❌ Login falhou: usuário ou senha incorretos");
-        return null;
-      },
-    }),
-  ],
-  pages: {
-    signIn: "/login",
-  },
-  session: {
-    strategy: "jwt",
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-});
-
-export { handler as GET, handler as POST };
+    // Prossegue com a lógica de login bem-sucedido
+    return NextResponse.json({ ok: true, message: 'Login bem-sucedido' });
+  } catch (error) {
+    return NextResponse.json(
+      { ok: false, message: 'Erro interno do servidor' },
+      { status: 500 }
+    );
+  }
+}
