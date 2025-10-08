@@ -32,6 +32,7 @@ const handler = NextAuth({
         const senhaValida = await bcrypt.compare(credentials.senha, hash!);
         console.log("Senha válida?", senhaValida);
 
+        // Retorna o usuário se as credenciais estiverem corretas
         if (credentials.usuario === ADMIN_USER && senhaValida) {
           console.log("✅ Login autorizado!");
           return { id: "1", name: "Administrador" };
