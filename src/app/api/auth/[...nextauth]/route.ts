@@ -25,7 +25,11 @@ const handler = NextAuth({
           return null;
         }
 
-        const senhaValida = await bcrypt.compare(credentials.senha, ADMIN_HASH);
+        const hash = ADMIN_HASH || process.env.ADMIN_PW_HASH;
+if (!hash) throw new Error("ADMIN_PW_HASH não definido");
+
+const senhaValida = await bcrypt.compare(credentials.senha, hash);
+
         console.log("Senha válida?", senhaValida);
 
         if (credentials.usuario === ADMIN_USER && senhaValida) {
