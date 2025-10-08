@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
 import bcrypt from "bcryptjs";
 
-// Definindo authOptions separadamente para exportar
-export const authOptions = {
+// Exporta authOptions para usar no server layout
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -37,7 +38,7 @@ export const authOptions = {
           name: credentials.usuario,
           email: `${credentials.usuario}@admin.com`,
           role: "admin",
-        };
+        } as User & { role: string };
       },
     }),
   ],
@@ -46,29 +47,19 @@ export const authOptions = {
     error: "/auth/error",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        (token as any).role = (user as any).role;
-      }
+    async jwt({ token, user }: { token: JWT & { role?: string }; user?: User & { role?: string } }) {
+      if (user) token.role = user.role;
       return token;
     },
-    async session({ session, token }) {
-      if (token && session.user) {
-        const user = session.user as typeof session.user & { id: string; role?: string };
-        user.id = token.sub!;
-        user.role = (token as any).role;
-      }
+    async session({ session, token }: { session: any; token: JWT & { role?: string } }) {
+      if (token && session.user) session.user.role = token.role;
       return session;
     },
   },
-  session: {
-    strategy: "jwt",
-  },
+  session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Cria o handler do NextAuth usando authOptions
 const handler = NextAuth(authOptions);
 
-// Exporta para rotas GET e POST
 export { handler as GET, handler as POST };
