@@ -1,34 +1,78 @@
-import { NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
-export async function POST(request: Request) {
-  try {
-    const { senha } = await request.json(); // Supondo que senha venha do corpo da requisição
+export const authOptions = {
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        usuario: { label: "Usuário", type: "text" },
+        senha: { label: "Senha", type: "password" },
+      },
+      async authorize(credentials) {
+        // Validar credenciais
+        if (!credentials?.usuario || !credentials?.senha) {
+          throw new Error("Usuário e senha são obrigatórios");
+        }
 
-    // Verifica se senha foi fornecida e é uma string
-    if (!senha || typeof senha !== 'string') {
-      return NextResponse.json(
-        { ok: false, message: 'Senha é obrigatória' },
-        { status: 400 }
-      );
-    }
+        const ADMIN_USER = process.env.ADMIN_USER;
+        const ADMIN_PW_HASH = process.env.ADMIN_PW_HASH;
 
-    // Compara a senha fornecida com a senha hasheada
-    const match = await bcrypt.compare(senha, process.env.ADMIN_PW_HASH!);
+        // Validar variáveis de ambiente
+        if (!ADMIN_USER || !ADMIN_PW_HASH) {
+          console.error("Erro: Variáveis de ambiente ADMIN_USER ou ADMIN_PW_HASH ausentes");
+          throw new Error("Erro de configuração do servidor");
+        }
 
-    if (!match) {
-      return NextResponse.json(
-        { ok: false, message: 'Credenciais inválidas' },
-        { status: 401 }
-      );
-    }
+        // Verificar usuário
+        if (credentials.usuario !== ADMIN_USER) {
+          throw new Error("Credenciais inválidas");
+        }
 
-    // Prossegue com a lógica de login bem-sucedido
-    return NextResponse.json({ ok: true, message: 'Login bem-sucedido' });
-  } catch (error) {
-    return NextResponse.json(
-      { ok: false, message: 'Erro interno do servidor' },
-      { status: 500 }
-    );
-  }
-}
+        // Comparar senha
+        const match = await bcrypt.compare(credentials.senha, ADMIN_PW_HASH);
+        if (!match) {
+          throw new Error("Credenciais inválidas");
+        }
+
+        // Retornar objeto de usuário para o NextAuth
+        return {
+          id: "1",
+          name: credentials.usuario,
+          email: `${credentials.usuario}@admin.com`,
+          role: "admin",
+        };
+      },
+    }),
+  ],
+  pages: {
+    signIn: "/auth/signin", // Página de login customizada (crie se necessário)
+    error: "/auth/error", // Página de erro customizada (opcional)
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      // Adicionar role ao token JWT
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Adicionar role à sessão
+      if (token) {
+        session.user.id = token.sub;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
