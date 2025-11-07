@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Redireciona se não estiver logado
+  
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");

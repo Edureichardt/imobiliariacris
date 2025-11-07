@@ -37,6 +37,8 @@ export default function RootLayout({
           content="LRBP7xDyhJN7nIQ5s0JWo3R1rmDJW5u2A3An8KASHII"
         />
         <link rel="icon" href="/favicon.ico" />
+
+        {/* --- Schema.org JSON-LD --- */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -57,7 +59,24 @@ export default function RootLayout({
             }),
           }}
         />
+
+        {/* --- Google tag (gtag.js) --- */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17701518581"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17701518581');
+            `,
+          }}
+        />
       </head>
+
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Preloader />
         <Header />
