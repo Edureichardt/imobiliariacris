@@ -37,6 +37,11 @@ export default function Pesquisa() {
         <option value="">Cidade</option>
         <option value="Rio Negro PR">Rio Negro PR</option>
         <option value="Mafra SC">Mafra SC</option>
+        <option value="Itaópolis SC">Itaópolis SC</option>
+        <option value="Monte Castelo PR">Monte Castelo PR</option>
+        <option value="Papanduva SC">Papanduva SC</option>
+        <option value="Canoinhas SC">Canoinhas SC</option>
+        
       </select>
 
       <input

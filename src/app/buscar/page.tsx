@@ -77,7 +77,7 @@ const Pesquisa: React.FC<{
             name: 'tipo',
             options: ['', 'casa', 'apartamento', 'terreno', 'comercial', 'sítio'],
           },
-          { label: 'Cidade', name: 'cidade', options: ['', 'Rio Negro - PR', 'Mafra - SC'] },
+          { label: 'Cidade', name: 'cidade', options: ['', 'Rio Negro - PR', 'Mafra - SC', 'Itaiópolis - SC', 'Monte Castelo - PR','Litoral','Papanduva - SC','Canoinhas - SC'] },
           { label: 'Operação', name: 'operacao', options: ['', 'comprar', 'alugar'] },
         ].map(({ label, name, options }) => (
           <div key={name}>
