@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fa';
 
 const tipos = ['Casa', 'Apartamento', 'Terreno', 'Comercial', 'Sítio'];
-const cidades = ['Rio Negro - PR', 'Mafra - SC', 'Itaiópolis - SC', 'Monte Castelo - PR','Litoral'];
+const cidades = ['Rio Negro - PR', 'Mafra - SC', 'Itaiópolis - SC', 'Monte Castelo - PR','Litoral','Papanduva - SC','Canoinhas - SC'];
 
 function formatarValor(valor: string) {
   const numeros = valor.replace(/\D/g, '');
