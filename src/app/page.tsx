@@ -24,7 +24,7 @@ type Imovel = {
   endereco: string;
   preco: number | string;
   fotos?: string[];
-  capa?: string; // agora incluímos capa
+  capa?: string; 
   cidade?: string;
   bairro?: string;
   operacao?: string;
