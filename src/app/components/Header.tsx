@@ -83,7 +83,8 @@ export default function Header() {
           showHeader ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto flex items-center px-4 relative h-24 space-x-6">
+        <div className="max-w-7xl mx-auto flex items-center px-4 relative h-24 gap-4 sm:gap-6
+">
 
           {/* LOGO */}
           <Link href="/" className="z-30 flex-shrink-0">
