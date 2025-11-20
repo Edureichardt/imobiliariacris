@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const imoveis = await prisma.imovel.findMany({
       where: {
         ...(tipo && { tipo: { equals: tipo, mode: 'insensitive' } }),
-        ...(cidade && { cidade: { equals: cidade, mode: 'insensitive' } }),
+        ...(cidade && { cidade: { contains: cidade, mode: 'insensitive' } }),
         ...(bairro && { bairro: { contains: bairro, mode: 'insensitive' } }),
         ...(operacao && { operacao: { equals: operacao, mode: 'insensitive' } }),
       },
@@ -81,4 +81,4 @@ export async function POST(req: Request) {
     if (error instanceof Error) console.error(error.stack);
     return NextResponse.json({ error: 'Erro ao cadastrar imóvel' }, { status: 500 });
   }
-}
+}  

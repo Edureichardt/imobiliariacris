@@ -35,12 +35,12 @@ export default function Pesquisa() {
 
       <select value={cidade} onChange={e => setCidade(e.target.value)} className="p-2 border rounded">
         <option value="">Cidade</option>
-        <option value="Rio Negro PR">Rio Negro PR</option>
-        <option value="Mafra SC">Mafra SC</option>
-        <option value="Itaópolis SC">Itaópolis SC</option>
-        <option value="Monte Castelo PR">Monte Castelo PR</option>
-        <option value="Papanduva SC">Papanduva SC</option>
-        <option value="Canoinhas SC">Canoinhas SC</option>
+        <option value="Rio Negro ">Rio Negro PR</option>
+        <option value="Mafra ">Mafra SC</option>
+        <option value="Itaópolis ">Itaópolis SC</option>
+        <option value="Monte Castelo ">Monte Castelo PR</option>
+        <option value="Papanduva ">Papanduva SC</option>
+        <option value="Canoinhas ">Canoinhas SC</option>
         
       </select>
 
