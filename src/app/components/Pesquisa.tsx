@@ -41,6 +41,7 @@ export default function Pesquisa() {
         <option value="Monte Castelo ">Monte Castelo PR</option>
         <option value="Papanduva ">Papanduva SC</option>
         <option value="Canoinhas ">Canoinhas SC</option>
+        <option value="São bento do sul ">São bento do sul SC</option>
         
       </select>
 

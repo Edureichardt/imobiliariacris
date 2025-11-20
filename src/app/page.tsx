@@ -66,7 +66,7 @@ const Pesquisa: React.FC<{
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end"
       >
         {[{ label: 'Tipo', name: 'tipo', options: ['', 'casa', 'apartamento', 'terreno', 'comercial', 'sítio'] },
-          { label: 'Cidade', name: 'cidade', options: ['', 'Rio Negro ', 'Mafra ', 'Itaiópolis ', 'Monte Castelo ','Litoral','Papanduva ','Canoinhas ' ] },
+          { label: 'Cidade', name: 'cidade', options: ['', 'Rio Negro ', 'Mafra ', 'Itaiópolis ', 'Monte Castelo ','Litoral','Papanduva ','Canoinhas ','São Bento do Sul' ] },
           { label: 'Operação', name: 'operacao', options: ['', 'comprar', 'alugar'] }].map(({ label, name, options }) => (
             <div key={name}>
               <label className="block mb-1 font-semibold">{label}</label>
