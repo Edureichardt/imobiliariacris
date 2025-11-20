@@ -202,7 +202,7 @@ export default function Header() {
 
         {/* MENU MOBILE dropdown */}
         {menuMobileOpen && (
-          <nav className="md:hidden bg-black bg-opacity-90 border-t border-green-400 p-4 space-y-3 text-white text-center z-50 fixed top-24 left-0 right-0 shadow-lg">
+          <nav className="md:hidden bg-black bg-opacity-90 border-t border-green-400 p-4 space-y-3 text-white text-center z-50 absolute top-24 left-0 right-0 shadow-lg">
             <Link href="/" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
               Início
             </Link>
