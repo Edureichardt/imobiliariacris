@@ -79,12 +79,14 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 bg-gradient-to-tl from-green-950 to-black text-white py-2 shadow-md transition-transform duration-300 ${
+        className={` fixed top-0 left-0 right-0 z-50 bg-gradient-to-tl from-green-950 to-black text-white py-2 shadow-md transition-transform duration-300 ${ 
           showHeader ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-        <div className="max-w-7xl mx-auto flex items-center px-4 relative h-24 gap-4 sm:gap-6
-">
+        <div className="max-w-7xl mx-auto flex items-center px-4 relative h-24 gap-4 sm:gap-6">
+
+
+
 
           {/* LOGO */}
           <Link href="/" className="z-30 flex-shrink-0">
@@ -111,6 +113,8 @@ export default function Header() {
             <Link href="/" className="hover:underline">Início</Link>
             <Link href="/#imoveis" className="hover:underline">Imóveis</Link>
             <Link href="/contato" className="hover:underline">Contato</Link>
+            
+            
             <a
               href="https://wa.me/554791648594"
               target="_blank"
@@ -118,7 +122,10 @@ export default function Header() {
               className="hover:underline"
             >
               Anuncie seu imóvel
+              
+              
             </a>
+            
           </nav>
 
           <div className="flex-1" />
@@ -202,29 +209,31 @@ export default function Header() {
         </div>
 
         {/* MENU MOBILE dropdown */}
-        {menuMobileOpen && (
-          <nav className="md:hidden bg-black bg-opacity-90 border-t border-green-400 p-4 space-y-3 text-white text-center z-50 absolute top-full left-0 right-0 shadow-lg">
-            <Link href="/" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
-              Início
-            </Link>
-            <Link href="/#imoveis" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
-              Imóveis
-            </Link>
-            <Link href="/contato" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
-              Contato
-            </Link>
-            <a
-              href="https://wa.me/554791648594"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block hover:underline"
-              onClick={() => setMenuMobileOpen(false)}
-            >
-              Anuncie seu imóvel
-            </a>
-          </nav>
-        )}
+       {menuMobileOpen && (
+  <nav className="md:hidden fixed top-24 left-0 right-0 bg-black bg-opacity-90 border-t border-green-400 p-4 space-y-3 text-white text-center z-50 shadow-lg">
+    <Link href="/" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
+      Início
+    </Link>
+    <Link href="/#imoveis" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
+      Imóveis
+    </Link>
+    <Link href="/contato" className="block hover:underline" onClick={() => setMenuMobileOpen(false)}>
+      Contato
+    </Link>
+    <a
+      href="https://wa.me/554791648594"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block hover:underline"
+      onClick={() => setMenuMobileOpen(false)}
+    >
+      Anuncie seu imóvel
+    </a>
+  </nav>
+)}
+
       </header>
+
 
       {/* Sidebar busca avançada */}
       <div

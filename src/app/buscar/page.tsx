@@ -165,7 +165,8 @@ const Paginacao: React.FC<{
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex justify-center mt-4 space-x-3">
+     <div className="w-full overflow-x-auto no-scrollbar mt-4">
+  <div className="flex justify-center gap-3 px-4 py-1 w-max mx-auto">
       {Array.from({ length: totalPages }).map((_, i) => (
         <button
           key={i}
@@ -180,6 +181,7 @@ const Paginacao: React.FC<{
           {i + 1}
         </button>
       ))}
+    </div>
     </div>
   );
 };
