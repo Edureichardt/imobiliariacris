@@ -132,12 +132,12 @@ const Rodape = () => {
         <div className="max-w-7xl mx-auto px-4 mt-10 text-center text-green-300 text-sm font-semibold">
           Desenvolvido por{' '}
           <a
-            href="https://www.instagram.com/edureichardt66/"
+            href="https://www.instagram.com/emr_solucoesdigitais/"
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-green-400"
           >
-            ReichardtDev's
+            EMR Soluçôes digitais
           </a>
         </div>
 
